@@ -18,7 +18,7 @@ export const PROJECTS: Project[] = [
     subtitle: 'Browser Tool · VFX',
     description:
       'A browser-based procedural editor for designing magic-circle VFX and exporting transparent textures for game-engine workflows.',
-    liveUrl: 'https://circle-editor.pages.dev/circleeditor/',
+    liveUrl: 'https://roowiki.com/circleeditor/',
     repoUrl: 'https://github.com/RooWiki/VFXMagicCircleEditor',
     primaryCta: 'Open Tool',
     image: '/projects/circle-editor.png',
@@ -30,7 +30,7 @@ export const PROJECTS: Project[] = [
     subtitle: 'Browser Tool · Technical Art',
     description:
       'A browser-based mesh utility focused on preparing geometry data for shader and technical-art workflows.',
-    liveUrl: 'https://roowiki.com/',
+    liveUrl: 'https://roowiki.com/mesheditor/',
     repoUrl: 'https://github.com/RooWiki/shadermesh',
     primaryCta: 'Open Tool',
     image: '/projects/mesh-editor.png',
