@@ -1,0 +1,99 @@
+@import 'tailwindcss';
+
+/* ─── iOS-derived grayscale palette ──────────────────────────────────────────
+   systemGray (#8E8E93) is identical in both modes.
+   All other grays flip between their light and dark variants.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root,
+[data-theme='light'] {
+  --rw-bg: #f2f2f7; /* systemGray6 light */
+  --rw-surface: #ffffff; /* cards */
+  --rw-surface-2: #e5e5ea; /* systemGray5 light — secondary surface */
+  --rw-border: #d1d1d6; /* systemGray4 light */
+  --rw-text-primary: #1c1c1e; /* near-black */
+  --rw-text-secondary: #8e8e93; /* systemGray — same in both modes */
+  --rw-text-tertiary: #aeaeb2; /* systemGray2 light */
+}
+
+[data-theme='dark'] {
+  --rw-bg: #1c1c1e; /* systemGray6 dark */
+  --rw-surface: #2c2c2e; /* systemGray5 dark */
+  --rw-surface-2: #48484a; /* systemGray3 dark */
+  --rw-border: #3a3a3c; /* systemGray4 dark */
+  --rw-text-primary: #f2f2f7; /* near-white */
+  --rw-text-secondary: #8e8e93; /* systemGray — same in both modes */
+  --rw-text-tertiary: #636366; /* systemGray2 dark */
+}
+
+/* ─── Base ────────────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background-color: var(--rw-bg);
+  color: var(--rw-text-primary);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* ─── Focus ring ──────────────────────────────────────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--rw-text-secondary);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* ─── Links ───────────────────────────────────────────────────────────────── */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ─── Screen-reader only utility ──────────────────────────────────────────── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

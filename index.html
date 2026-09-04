@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <title>RooWiki — Technical Artist · VFX · Tools</title>
+    <meta
+      name="description"
+      content="RooWiki is a Technical Artist and VFX Artist who creates real-time visual effects, shaders, and tools for artists."
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="RooWiki — Technical Artist · VFX · Tools" />
+    <meta
+      property="og:description"
+      content="Technical Artist focused on real-time VFX, shaders, and tools for artists."
+    />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="RooWiki — Technical Artist · VFX · Tools" />
+    <meta
+      name="twitter:description"
+      content="Technical Artist focused on real-time VFX, shaders, and tools for artists."
+    />
+
+    <!-- Apply theme before React mounts to prevent flash -->
+    <script>
+      try {
+        var stored = localStorage.getItem('roowiki:theme')
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        var theme = stored ? stored : prefersDark ? 'dark' : 'light'
+        document.documentElement.setAttribute('data-theme', theme)
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark')
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
