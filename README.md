@@ -94,11 +94,12 @@ Light and dark mode using the iOS/iPadOS grayscale system palette. Theme is:
 
 ## Current Status
 
-Phase 1 — Foundation complete. The site is functional with two featured projects, a Selected Work
-section, an About section, and a Footer with all social/profile links.
+Phase 2 — Real project media complete. The site is functional with two featured projects, a Selected
+Work section, an About section, and a Footer with all social/profile links.
 
-The Circle Editor project card uses a real application screenshot (`public/projects/circle-editor.png`).
-The Mesh Editor card uses a placeholder — real media will be added in Phase 2.
+Both featured project cards use real application screenshots:
+- Circle Editor: `public/projects/circle-editor.png` (1440×900)
+- Mesh Editor: `public/projects/mesh-editor.png` (1920×1080)
 
 ---
 

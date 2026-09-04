@@ -7,7 +7,7 @@
 | Phase | Name                              | Status         |
 | ----- | --------------------------------- | -------------- |
 | 1     | Foundation                        | **COMPLETED**   |
-| 2     | Real project media                | Pending        |
+| 2     | Real project media                | **COMPLETED**  |
 | 3     | Portfolio content refinement      | Pending        |
 | 4     | Three.js / interactive presentation | Pending      |
 | 5     | roowiki.com routing integration   | Pending        |
@@ -56,11 +56,14 @@ Single-page portfolio with all core sections and theme system in place.
 
 ## Phase 2 — Real Project Media
 
-Add remaining project media and optimize images.
+**Status: COMPLETED**
 
-- Add real Mesh Editor screenshot (`public/projects/mesh-editor.png`)
-- Optionally add a second row of project cards
-- Consider image optimization (WebP, lazy loading)
+### Completion Notes
+
+- Circle Editor media already present from Phase 1 (`public/projects/circle-editor.png`, 1440×900)
+- Mesh Editor real UI screenshot added (`public/projects/mesh-editor.png`, 1920×1080) — sourced from `shadermesh/docs/screenshots/02-main-editor-selected.png`
+- Both featured project cards now use real project imagery
+- No placeholder shown for any featured project
 
 ---
 

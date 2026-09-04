@@ -33,5 +33,7 @@ export const PROJECTS: Project[] = [
     liveUrl: 'https://roowiki.com/',
     repoUrl: 'https://github.com/RooWiki/shadermesh',
     primaryCta: 'Open Tool',
+    image: '/projects/mesh-editor.png',
+    imageAlt: 'Mesh Editor — browser-based mesh utility showing geometry viewport, inspector panel, and UV map controls',
   },
 ]
