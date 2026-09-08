@@ -1,6 +1,6 @@
 import { useTheme } from './hooks/useTheme'
 import Header from './components/Header'
-import Hero from './sections/Hero'
+import Hero from './sections/Hero/Hero'
 import FeaturedProjects from './sections/FeaturedProjects'
 import SelectedWork from './sections/SelectedWork'
 import About from './sections/About'
