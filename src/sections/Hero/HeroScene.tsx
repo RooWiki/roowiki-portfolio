@@ -1,29 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import type { Mesh } from 'three'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { FogExp2 } from 'three'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { usePerformanceTier } from '../../hooks/usePerformanceTier'
 import { QUALITY_CONFIGS } from '../../lib/three/performanceConfig'
+import ExplosionScene from '../../vfx/ExplosionScene'
 
-interface SceneContentProps {
-  paused: boolean
-}
+// Runs once inside the Canvas to aim the camera at the explosion composition.
+// Lives here (not in ExplosionScene) because camera ownership belongs to the
+// scene host. Phase 3 camera shake will extend this component.
+function CameraSetup() {
+  const { camera } = useThree()
+  const didSetup = useRef(false)
 
-function SceneContent({ paused }: SceneContentProps) {
-  const torusRef = useRef<Mesh>(null)
-
-  useFrame((_state, delta) => {
-    if (paused || !torusRef.current) return
-    torusRef.current.rotation.z += delta * 0.12
-    torusRef.current.rotation.x += delta * 0.04
+  useFrame(() => {
+    if (didSetup.current) return
+    camera.position.set(-0.5, 2.8, 9.5)
+    camera.lookAt(1.8, 0.2, -1.5)
+    didSetup.current = true
   })
 
-  return (
-    <mesh ref={torusRef} rotation={[Math.PI / 3.5, 0, 0] as const}>
-      <torusGeometry args={[3, 0.045, 8, 128] as const} />
-      <meshBasicMaterial color="#e05c00" />
-    </mesh>
-  )
+  return null
 }
 
 export default function HeroScene() {
@@ -47,14 +44,18 @@ export default function HeroScene() {
 
   return (
     <Canvas
-      camera={{ fov: 60, near: 0.1, far: 100, position: [0, 0, 8] as const }}
+      camera={{ fov: 55, near: 0.1, far: 60, position: [-0.5, 2.8, 9.5] }}
       dpr={[1, dprMax] as [number, number]}
       gl={{ antialias: true, powerPreference: 'high-performance' }}
       frameloop={frameloop}
-      onCreated={({ gl }) => gl.setClearColor(0x08080a, 1)}
+      onCreated={({ gl, scene }) => {
+        gl.setClearColor(0x08080a, 1)
+        scene.fog = new FogExp2(0x08080a, 0.038)
+      }}
       style={{ width: '100%', height: '100%', display: 'block' }}
     >
-      <SceneContent paused={reducedMotion} />
+      <CameraSetup />
+      <ExplosionScene paused={reducedMotion} />
     </Canvas>
   )
 }
