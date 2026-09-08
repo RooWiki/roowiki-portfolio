@@ -4,8 +4,8 @@ import { Vector3 } from 'three'
 import { TIMING } from './explosion/explosionConfig'
 import { sharpEnvelope } from './explosion/ExplosionTimeline'
 
-const SHAKE_MAGNITUDE = 0.055  // world units — small, not nauseating
-const SHAKE_FREQUENCY = 28.0   // oscillation frequency
+const SHAKE_MAGNITUDE = 0.082  // stronger initial impulse
+const SHAKE_FREQUENCY = 30.0   // primary oscillation frequency
 
 // Pre-allocated reusable vectors — zero allocation per frame
 const _base = new Vector3(-0.5, 2.8, 9.5)   // matches CameraSetup initial position
@@ -48,13 +48,15 @@ export function CameraShake({ clockRef, cycleDuration }: Props) {
       return
     }
 
-    // Two-axis sinusoidal shake decayed by envelope
+    // Primary impulse + secondary lower-frequency vibration
     const magnitude = envelope * SHAKE_MAGNITUDE
     const phase     = t * SHAKE_FREQUENCY
+    // Secondary vibration at ~1/3 frequency adds the "settling" feel
+    const phase2    = t * 9.0
     _off.set(
-      Math.sin(phase * 1.00) * magnitude,
-      Math.sin(phase * 0.85) * magnitude * 0.60,
-      Math.sin(phase * 1.30) * magnitude * 0.30,
+      Math.sin(phase  * 1.00) * magnitude       + Math.sin(phase2 * 1.00) * magnitude * 0.22,
+      Math.sin(phase  * 0.83) * magnitude * 0.55 + Math.sin(phase2 * 0.70) * magnitude * 0.14,
+      Math.sin(phase  * 1.28) * magnitude * 0.28,
     )
     camera.position.copy(_base).add(_off)
   })

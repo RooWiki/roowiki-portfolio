@@ -13,15 +13,17 @@ export const SPARKS_COUNT: Record<QualityTier, number> = {
 }
 
 // Physics
-export const SPARKS_GRAVITY      = 4.2   // m/s² downward
-export const SPARKS_SPEED_MIN    = 2.0
-export const SPARKS_SPEED_MAX    = 6.8
-export const SPARKS_LIFETIME_MIN = 0.30
-export const SPARKS_LIFETIME_MAX = 1.80
+export const SPARKS_GRAVITY      = 4.8   // slightly heavier fall
+export const SPARKS_SPEED_MIN    = 1.8
+export const SPARKS_SPEED_MAX    = 10.5  // fast streaking sparks for radial burst impact
 
-// Upward bias: sparks are biased into the upper hemisphere
-export const SPARKS_UPWARD_BIAS = 0.55
+// Lifetime: wide range creates fast sparks + long-dying embers
+export const SPARKS_LIFETIME_MIN = 0.25
+export const SPARKS_LIFETIME_MAX = 2.80
 
-// Point rendering
-export const SPARKS_SIZE_MIN = 2.0   // pixels at full scale
-export const SPARKS_SIZE_MAX = 4.5
+// Upward bias: stronger hemisphere bias
+export const SPARKS_UPWARD_BIAS = 0.65
+
+// Point rendering: wide range — a few bright large sparks stand out
+export const SPARKS_SIZE_MIN = 1.8
+export const SPARKS_SIZE_MAX = 7.0

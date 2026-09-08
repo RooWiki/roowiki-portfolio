@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { CircleGeometry, ShaderMaterial, Mesh } from 'three'
 import { EXPLOSION_ORIGIN, TIMING } from './explosionConfig'
 
-const SCORCH_RADIUS = 2.2
+const SCORCH_RADIUS = 3.0
 
 const vertexShader = /* glsl */`
 varying vec2 vUv;
@@ -27,18 +27,25 @@ void main() {
   vec2 uv = vUv - 0.5;         // center at 0,0
   float dist = length(uv);     // 0 = center, 0.5 = edge
 
-  // Base radial fade
-  float radial = 1.0 - smoothstep(0.28, 0.50, dist);
+  // Radial fade with organic edge
+  float radial = 1.0 - smoothstep(0.22, 0.50, dist);
 
-  // Add a bit of procedural irregularity to break the perfect circle
-  float angle = atan(uv.y, uv.x);
-  float noise = hash(vec2(angle * 3.0, dist * 8.0));
-  float irregular = radial * (0.70 + noise * 0.30);
+  // Multi-scale edge noise for irregular scorch boundary
+  float angle  = atan(uv.y, uv.x);
+  float noise1 = hash(vec2(angle * 4.0,  dist * 10.0));  // fine edge
+  float noise2 = hash(vec2(angle * 1.5,  dist * 4.0));   // coarse shape
+  float noise  = noise1 * 0.40 + noise2 * 0.60;
 
-  // Very dark burnt color
-  vec3 color = vec3(0.025, 0.010, 0.005);
+  // Inner char (darker) vs outer heat stain (slightly lighter)
+  float innerMask = 1.0 - smoothstep(0.10, 0.20, dist);
+  float irregular  = radial * (0.55 + noise * 0.45);
 
-  gl_FragColor = vec4(color, irregular * uAlpha);
+  // Dark burnt center, slightly less dark at edges (heat stain effect)
+  vec3 center = vec3(0.020, 0.008, 0.003);
+  vec3 edge   = vec3(0.040, 0.018, 0.006);
+  vec3 color  = mix(edge, center, innerMask);
+
+  gl_FragColor = vec4(color, irregular * uAlpha * 0.90);
 }
 `
 
@@ -82,7 +89,7 @@ export function ScorchMark({ clockRef, cycleDuration }: Props) {
     } else {
       alpha = (dur - sysT) / 1.5         // fade out at end
     }
-    matRef.current.uniforms.uAlpha.value = Math.max(0, alpha) * 0.75
+    matRef.current.uniforms.uAlpha.value = Math.max(0, alpha) * 0.65
   })
 
   return (

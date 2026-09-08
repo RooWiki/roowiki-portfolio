@@ -139,11 +139,13 @@ varying vec3  vViewNormal;
 
 vec3 fireRamp(float t) {
   // t: 0.0 = hottest, 1.0 = coldest
+  // Orange is the dominant zone (0.10 → 0.72 = 62% of range).
+  // White-hot is kept to small accents (< 0.10).
   t = clamp(t, 0.0, 1.0);
-  if (t < 0.14) return mix(uColorHot,    uColorBright, t / 0.14);
-  if (t < 0.38) return mix(uColorBright, uColorMid,    (t - 0.14) / 0.24);
-  if (t < 0.68) return mix(uColorMid,    uColorCool,   (t - 0.38) / 0.30);
-                return mix(uColorCool,    uColorDead,   (t - 0.68) / 0.32);
+  if (t < 0.10) return mix(uColorHot,    uColorBright, t / 0.10);
+  if (t < 0.36) return mix(uColorBright, uColorMid,    (t - 0.10) / 0.26);
+  if (t < 0.72) return mix(uColorMid,    uColorCool,   (t - 0.36) / 0.36);
+                return mix(uColorCool,    uColorDead,   (t - 0.72) / 0.28);
 }
 
 void main() {

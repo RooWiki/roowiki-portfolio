@@ -56,14 +56,25 @@ void main() {
   float n2 = noise(noiseUv * 2.1 + vec2(uAge * 0.4, uAge * -0.3));
   float turbulence = n1 * 0.6 + n2 * 0.4;
 
-  float alpha = mask * turbulence * uAlpha * (1.0 - uAge * 0.8);
+  // Alpha: stronger for early puffs, fade toward end; non-linear age fade.
+  float ageFade = 1.0 - uAge * uAge;
+  float alpha = mask * turbulence * uAlpha * ageFade;
   alpha = clamp(alpha, 0.0, 1.0);
   if (alpha < 0.005) discard;
 
-  // Hot smoke (early) → dark smoke (late)
-  vec3 hotSmoke  = vec3(0.22, 0.14, 0.08);
-  vec3 darkSmoke = vec3(0.06, 0.05, 0.04);
-  vec3 color     = mix(hotSmoke, darkSmoke, uAge);
+  // Three-stage color: orange-hot (active fire) → warm gray (cooling) → dark (aftermath).
+  // uAge < 0.25: orange smoke emerging from active fire
+  // uAge 0.25-0.65: transition through warm gray
+  // uAge > 0.65: dark settled smoke
+  vec3 hotSmoke  = vec3(0.30, 0.14, 0.04);   // orange-warm, from fire
+  vec3 warmSmoke = vec3(0.14, 0.10, 0.08);   // warm gray mid-stage
+  vec3 darkSmoke = vec3(0.05, 0.04, 0.03);   // dark ash
+
+  vec3 color;
+  if (uAge < 0.25)
+    color = mix(hotSmoke, warmSmoke, uAge / 0.25);
+  else
+    color = mix(warmSmoke, darkSmoke, (uAge - 0.25) / 0.75);
 
   gl_FragColor = vec4(color, alpha);
 }
@@ -149,7 +160,8 @@ export function Smoke({ clockRef, cycleDuration, tier }: Props) {
       mesh.instanceMatrix.needsUpdate = true
 
       mat.uniforms.uAge.value   = tNorm
-      mat.uniforms.uAlpha.value = 0.55
+      // Higher base opacity so overlapping puffs build into visible mass
+      mat.uniforms.uAlpha.value = 0.72
     }
   })
 

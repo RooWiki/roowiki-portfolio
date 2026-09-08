@@ -59,9 +59,9 @@ export function PostFx({ tier, clockRef, cycleDuration }: Props) {
     <EffectComposer enableNormalPass={false}>
       {enableHeat && <HeatDistortion ref={heatRef} />}
       <Bloom
-        intensity={0.80}
-        luminanceThreshold={0.65}
-        luminanceSmoothing={0.20}
+        intensity={0.95}
+        luminanceThreshold={0.58}
+        luminanceSmoothing={0.28}
         kernelSize={kernelSize}
       />
     </EffectComposer>

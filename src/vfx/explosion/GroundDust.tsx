@@ -13,8 +13,8 @@ import { EXPLOSION_ORIGIN, TIMING } from './explosionConfig'
 const DUST_COUNT: Record<QualityTier, number> = { high: 800, medium: 400, low: 160 }
 const DUST_START    = TIMING.dustStart
 const DUST_DURATION = TIMING.dustEnd - TIMING.dustStart
-const DUST_GRAVITY  = 1.2
-const DUST_DRAG     = 1.8   // velocity damping factor
+const DUST_GRAVITY  = 0.8   // lower gravity — dust hangs in air
+const DUST_DRAG     = 1.4   // less drag — spreads further before slowing
 
 const vertexShader = /* glsl */`
 attribute vec3  aInitVel;
@@ -63,12 +63,13 @@ void main() {
   float d     = length(coord) * 2.0;
   if (d > 1.0) discard;
 
-  float edge  = 1.0 - smoothstep(0.3, 1.0, d);
-  float alpha = edge * (1.0 - vTNorm) * 0.50;
+  // Very soft edges — dust puffs blend into each other
+  float edge  = 1.0 - smoothstep(0.15, 1.0, d);
+  float alpha = edge * (1.0 - vTNorm * 0.80) * 0.62;
   alpha = clamp(alpha, 0.0, 1.0);
 
-  // Warm sandy dust color
-  vec3 color = mix(vec3(0.30, 0.18, 0.08), vec3(0.15, 0.09, 0.04), vTNorm);
+  // Warm sandy dust, slightly brighter at ejection
+  vec3 color = mix(vec3(0.35, 0.20, 0.09), vec3(0.14, 0.09, 0.04), vTNorm);
 
   gl_FragColor = vec4(color, alpha);
 }
@@ -114,14 +115,17 @@ function getDustGeo(tier: QualityTier): BufferGeometry {
     positions[i * 3 + 1] = EXPLOSION_ORIGIN[1] + rng() * 0.1
     positions[i * 3 + 2] = EXPLOSION_ORIGIN[2] + Math.sin(angle) * dist
 
-    // Mostly radial horizontal velocity, very little upward
-    const speed = 1.5 + rng() * 3.5
-    initVels[i * 3 + 0] = Math.cos(angle) * speed
-    initVels[i * 3 + 1] = rng() * 0.6
-    initVels[i * 3 + 2] = Math.sin(angle) * speed
+    // Radial horizontal ejection, slight vertical lift
+    const speed = 2.0 + rng() * 5.0   // faster initial spread
+    // Break radial symmetry: asymmetric X/Z scaling per particle
+    const asymX = 0.7 + rng() * 0.6
+    const asymZ = 0.7 + rng() * 0.6
+    initVels[i * 3 + 0] = Math.cos(angle) * speed * asymX
+    initVels[i * 3 + 1] = rng() * 0.8
+    initVels[i * 3 + 2] = Math.sin(angle) * speed * asymZ
 
-    lifetimes[i] = 0.5 + rng() * 0.8
-    sizes[i]     = 20 + rng() * 30
+    lifetimes[i] = 0.8 + rng() * 1.2   // longer persistence
+    sizes[i]     = 22 + rng() * 36      // slightly larger puffs
   }
 
   const geo = new BufferGeometry()

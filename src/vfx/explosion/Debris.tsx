@@ -5,7 +5,7 @@ import {
   BufferAttribute,
   ShaderMaterial,
   Points,
-  AdditiveBlending,
+  NormalBlending,
 } from 'three'
 import type { QualityTier } from '../../lib/three/performanceConfig'
 import { EXPLOSION_ORIGIN, TIMING } from './explosionConfig'
@@ -13,7 +13,7 @@ import { EXPLOSION_ORIGIN, TIMING } from './explosionConfig'
 const DEBRIS_COUNT: Record<QualityTier, number> = { high: 80, medium: 45, low: 20 }
 const DEBRIS_START    = TIMING.debrisStart
 const DEBRIS_DURATION = TIMING.debrisEnd - TIMING.debrisStart
-const DEBRIS_GRAVITY  = 5.5
+const DEBRIS_GRAVITY  = 8.0   // heavier fall — debris has mass
 
 const vertexShader = /* glsl */`
 attribute vec3  aInitVel;
@@ -61,14 +61,17 @@ void main() {
   float d     = length(coord) * 2.0;
   if (d > 1.0) discard;
 
-  // Rough-edged debris chunk
-  float edge  = 1.0 - smoothstep(0.5, 1.0, d);
-  float alpha = edge * (1.0 - vTNorm);
+  // Solid-edged chunks (harder edge than sparks — debris has mass)
+  float edge  = 1.0 - smoothstep(0.55, 0.85, d);
+  // Fade out only at end of life to stay readable against fireball
+  float alpha = edge * (1.0 - vTNorm * vTNorm);
 
-  // Dark rocky color with slight warm tint
-  vec3 color = mix(vec3(0.18, 0.13, 0.08), vec3(0.05, 0.03, 0.01), vTNorm);
+  // Rocky material: warm at ejection, cooling to dark
+  vec3 hot   = vec3(0.25, 0.16, 0.08);
+  vec3 rocky = vec3(0.09, 0.06, 0.03);
+  vec3 color = mix(hot, rocky, vTNorm);
 
-  gl_FragColor = vec4(color, alpha * 0.85);
+  gl_FragColor = vec4(color, alpha * 0.90);
 }
 `
 
@@ -82,7 +85,7 @@ const _mat = new ShaderMaterial({
   },
   transparent: true,
   depthWrite:  false,
-  blending:    AdditiveBlending,
+  blending:    NormalBlending,
 })
 
 function seededRng(seed: number): () => number {
@@ -111,13 +114,14 @@ function getDebrisGeo(tier: QualityTier): BufferGeometry {
 
     const theta = rng() * Math.PI * 2
     const phi   = Math.acos(rng() * 1.2 - 0.2)  // upper hemisphere bias
-    const speed = 1.5 + rng() * 4.5
+    // Speed variation: some slow heavy chunks, some fast-ejected pieces
+    const speed = 1.0 + rng() * rng() * 8.0      // skewed toward slower speeds
     initVels[i * 3 + 0] = Math.sin(phi) * Math.cos(theta) * speed
     initVels[i * 3 + 1] = Math.cos(phi) * speed
     initVels[i * 3 + 2] = Math.sin(phi) * Math.sin(theta) * speed
 
-    lifetimes[i] = 0.6 + rng() * 1.2
-    sizes[i]     = 4.0 + rng() * 10.0
+    lifetimes[i] = 0.8 + rng() * 1.8   // longer fall arcs
+    sizes[i]     = 5.0 + rng() * 20.0  // wider size range: small chips to large chunks
     seedsArr[i]  = rng()
   }
 

@@ -4,8 +4,8 @@ import { RingGeometry, ShaderMaterial, Mesh, AdditiveBlending } from 'three'
 import { EXPLOSION_ORIGIN, TIMING } from './explosionConfig'
 import { envelope } from './ExplosionTimeline'
 
-const SHOCKWAVE_MAX_RADIUS = 5.5  // world units at full expansion
-const SHOCKWAVE_RING_WIDTH = 0.55 // fraction of total radius used for ring width
+const SHOCKWAVE_MAX_RADIUS = 6.5  // world units — wider reach
+const SHOCKWAVE_RING_WIDTH = 0.28 // thinner ring: perceptible impulse not a selection circle
 
 const vertexShader = /* glsl */`
 varying vec2 vUv;
@@ -26,8 +26,8 @@ void main() {
   float ring  = 1.0 - abs(vUv.y - 0.5) * 2.0;   // 0 at edges, 1 at ring center
   float alpha = ring * ring * uAlpha;
 
-  // Dusty warm tone — subtle, not a bright white ring
-  vec3 color = vec3(0.75, 0.45, 0.20);
+  // Bright warm tone at ring center, dusty at edges — impact pulse
+  vec3 color = vec3(0.90, 0.58, 0.22);
   gl_FragColor = vec4(color, alpha);
 }
 `
@@ -81,8 +81,9 @@ export function Shockwave({ clockRef, cycleDuration }: Props) {
 
     // Alpha: strong at start, fades away
     matRef.current.uniforms.uProgress.value = progress
+    // Faster onset, stronger peak, quick decay — felt more than seen
     matRef.current.uniforms.uAlpha.value    =
-      envelope(sysT, dur * 0.08, dur) * 0.70
+      envelope(sysT, dur * 0.05, dur) * 0.92
   })
 
   return (
