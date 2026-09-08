@@ -55,7 +55,7 @@ export function IgnitionFlash({ clockRef, cycleDuration }: Props) {
     }
 
     // ── Outer bloom approximation: large, very transparent, additive ─────────
-    const bloomE = envelope(t, 0.035, TIMING.bloomEnd)
+    const bloomE = envelope(t, 0.035, TIMING.flashEnd)
     if (bloomMesh.current && bloomMat.current) {
       bloomMesh.current.scale.setScalar(bloomE * 3.2)
       bloomMat.current.opacity = bloomE * 0.28

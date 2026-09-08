@@ -84,6 +84,14 @@ a {
   text-decoration: none;
 }
 
+/* ─── Responsive nav ──────────────────────────────────────────────────────── */
+
+@media (max-width: 679px) {
+  .rw-nav-desktop {
+    display: none;
+  }
+}
+
 /* ─── Screen-reader only utility ──────────────────────────────────────────── */
 
 .sr-only {

@@ -52,9 +52,10 @@ export default function Header({ theme, onToggleTheme }: HeaderProps) {
           RooWiki
         </a>
 
-        {/* Nav — hidden on small screens; visible from md up */}
+        {/* Nav — hidden on small screens via .rw-nav-desktop */}
         <nav
           aria-label="Main navigation"
+          className="rw-nav-desktop"
           style={{
             display: 'flex',
             alignItems: 'center',

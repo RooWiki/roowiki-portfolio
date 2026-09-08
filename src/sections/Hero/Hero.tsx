@@ -29,6 +29,19 @@ export default function Hero() {
         </Suspense>
       </div>
 
+      {/* Gradient scrim — ensures text legibility over the VFX canvas */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          zIndex: 0,
+          pointerEvents: 'none',
+          background:
+            'linear-gradient(to top, rgba(8,8,10,0.82) 0%, rgba(8,8,10,0.40) 35%, transparent 65%)',
+        }}
+      />
+
       {/* HTML content — sits above the canvas */}
       <div
         style={{
@@ -100,7 +113,7 @@ export default function Hero() {
           </p>
 
           <a
-            href="#work"
+            href="#about"
             style={{
               display: 'inline-block',
               padding: '12px 28px',
