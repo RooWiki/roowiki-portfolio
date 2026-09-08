@@ -15,7 +15,9 @@ function CameraSetup() {
   useFrame(() => {
     if (done.current) return
     camera.position.set(-0.5, 2.8, 9.5)
-    camera.lookAt(1.8, 0.2, -1.5)
+    // Looking slightly higher (0.5 vs 0.2) and right (2.0 vs 1.8): better frames
+    // the fireball which now rises 1.4+ world units above the explosion origin.
+    camera.lookAt(2.0, 0.5, -1.5)
     done.current = true
   })
 

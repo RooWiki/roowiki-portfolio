@@ -69,13 +69,15 @@ void main() {
   vec3 timeOff = vec3(uTime * 0.40, uTime * -0.25, uTime * 0.15);
   vec3 pBase   = position * uNoiseScale + seedOff + timeOff;
 
-  // Domain-warped FBM for displacement — stronger warp (1.20) produces
-  // curling turbulent billows rather than uniformly noisy sphere surface.
+  // Domain-warped FBM for displacement — warp 1.45 produces strongly
+  // curling turbulent billows; sharper normalization creates distinct ridges.
   float warpX = fbm(pBase);
   float warpY = fbm(pBase + vec3(4.3, 1.1, 2.9));
-  float n     = fbm(pBase + vec3(warpX, warpY, 0.0) * 1.20);
+  float n     = fbm(pBase + vec3(warpX, warpY, 0.0) * 1.45);
 
-  float nNorm = clamp(n * 1.75 - 0.15, 0.0, 1.0);
+  // n * 2.10 - 0.25: amplifies contrast between peaks and valleys.
+  // Values below 0.119 (quiet surface) map to 0 (no displacement).
+  float nNorm = clamp(n * 2.10 - 0.25, 0.0, 1.0);
   vec3 displaced = position + normal * nNorm * uNoiseStrength;
 
   // Low-frequency thermal blobs — very large scale, slow independent scroll.
@@ -87,13 +89,13 @@ void main() {
   vLowNoise = clamp(ltA * 0.6 + ltB * 0.4, 0.0, 1.0);
 
   // Erosion noise — medium frequency, different seed offset and time scroll.
-  // Fine + coarse blend creates both small perforations and large cavities.
-  // Slower scroll than displacement keeps it billowing, not flickering.
+  // Coarse scale reduced 0.38→0.28: fewer, larger coherent cavities instead of
+  // swiss-cheese texture. Upward scroll matches fireball buoyancy direction.
   vec3 pEr = position * (uNoiseScale * 0.55) + seedOff * 2.1;
-  pEr += vec3(uTime * 0.14, uTime * 0.06, uTime * -0.09);
+  pEr += vec3(uTime * 0.10, uTime * 0.18, uTime * -0.07);
   float erFine   = valueNoise(pEr);
-  float erCoarse = valueNoise(pEr * 0.38 + vec3(1.3, 2.7, -0.6));
-  vErosion = clamp(erFine * 0.52 + erCoarse * 0.48, 0.0, 1.0);
+  float erCoarse = valueNoise(pEr * 0.28 + vec3(1.3, 2.7, -0.6));
+  vErosion = clamp(erFine * 0.48 + erCoarse * 0.52, 0.0, 1.0);
 
   vNoise      = nNorm;
   vViewNormal = normalize(normalMatrix * normal);
@@ -154,17 +156,20 @@ void main() {
 
   // Erosion: discard genuinely empty regions, soft-fade partial ones.
   // smoothstep width of 0.28 keeps edges billowing rather than aliased.
-  float erosionMask = smoothstep(uErosionThreshold, uErosionThreshold + 0.28, vErosion);
+  // Slightly tighter transition width (0.24 vs 0.28): edge structure more readable.
+  float erosionMask = smoothstep(uErosionThreshold, uErosionThreshold + 0.24, vErosion);
   if (erosionMask < 0.015) discard;
 
   // Temperature → color.
   // Low-freq thermal blobs (vLowNoise) are the dominant spatial term so that
   // each lobe has large visible hot and cool patches rather than uniform color.
   // Life drives overall shift from hot to dead; rim adds edge cooling.
+  // Stronger thermal contrast: vLowNoise coefficient 0.36→0.40, rim 0.18→0.26.
+  // Creates clearer hot-interior / cool-rim gradient visible on each lobe.
   float temp = uLife               * 0.52
-             + (1.0 - vLowNoise)  * 0.36   // large blobs: high vLowNoise = hotter
+             + (1.0 - vLowNoise)  * 0.40   // thermal blobs: wider hot/cool separation
              + (1.0 - vNoise)     * 0.08   // fine peaks slightly hotter
-             + rim                * 0.18;  // edges cool off
+             + rim                * 0.26;  // stronger edge cooling
 
   vec3 color = fireRamp(temp) * uDepthFactor;
 

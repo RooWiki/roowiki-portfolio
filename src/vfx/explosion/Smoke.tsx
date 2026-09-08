@@ -48,13 +48,17 @@ void main() {
   vec2 uv = vUv - 0.5;
 
   float dist = length(uv);
-  float mask = 1.0 - smoothstep(0.25, 0.50, dist);
+  // Larger flat central area (0.30 vs 0.25): gives puffs more usable surface,
+  // reduces visual "tip" that reads as a circle.
+  float mask = 1.0 - smoothstep(0.30, 0.50, dist);
   if (mask < 0.01) discard;
 
-  vec2 noiseUv = uv * 2.5 + vec2(uSeed * 3.7, uSeed * 1.2);
+  vec2 noiseUv = uv * 3.5 + vec2(uSeed * 3.7, uSeed * 1.2);  // finer texture
   float n1 = noise(noiseUv);
-  float n2 = noise(noiseUv * 2.1 + vec2(uAge * 0.4, uAge * -0.3));
-  float turbulence = n1 * 0.6 + n2 * 0.4;
+  float n2 = noise(noiseUv * 2.0 + vec2(uAge * 0.35, uAge * -0.28));
+  // Large-scale interior gradient: creates bright/dark regions within puff
+  float n3 = noise(uv * 1.1 + vec2(uSeed * 1.9, uSeed * 0.7));
+  float turbulence = n1 * 0.45 + n2 * 0.35 + n3 * 0.20;
 
   // Alpha: stronger for early puffs, fade toward end; non-linear age fade.
   float ageFade = 1.0 - uAge * uAge;

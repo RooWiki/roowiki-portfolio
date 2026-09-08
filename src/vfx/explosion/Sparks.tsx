@@ -76,19 +76,20 @@ void main() {
   float d    = length(coord) * 2.0;
   if (d > 1.0) discard;
 
-  // Color ramp: white-yellow → orange → deep red → dark ember
-  vec3 hot  = vec3(1.00, 0.90, 0.40);
-  vec3 mid  = vec3(1.00, 0.35, 0.02);
-  vec3 cool = vec3(0.55, 0.06, 0.00);
-  vec3 dead = vec3(0.08, 0.01, 0.00);
+  // Color ramp: white-hot burst → orange arc → deep red → dark ember
+  vec3 hot  = vec3(1.00, 0.96, 0.70);  // brighter white-yellow at ejection
+  vec3 mid  = vec3(1.00, 0.30, 0.01);  // richer orange mid-arc
+  vec3 cool = vec3(0.60, 0.05, 0.00);
+  vec3 dead = vec3(0.07, 0.01, 0.00);
 
   vec3 col;
   if      (vTNorm < 0.25) col = mix(hot,  mid,  vTNorm / 0.25);
   else if (vTNorm < 0.65) col = mix(mid,  cool, (vTNorm - 0.25) / 0.40);
   else                    col = mix(cool, dead,  (vTNorm - 0.65) / 0.35);
 
-  // Soft edge + age fade
-  float edgeSoft = 1.0 - smoothstep(0.4, 1.0, d);
+  // Slightly harder edge at birth (crisp bright sparks), softer as they age
+  float hardness = mix(0.30, 0.45, vTNorm);
+  float edgeSoft = 1.0 - smoothstep(hardness, 0.95, d);
   float alpha    = edgeSoft * (1.0 - vTNorm * vTNorm);
   alpha = clamp(alpha, 0.0, 1.0);
 

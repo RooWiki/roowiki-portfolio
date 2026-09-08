@@ -4,14 +4,14 @@ import { EXPLOSION_ORIGIN } from '../explosionConfig'
 // ─── Timing ──────────────────────────────────────────────────────────────────
 export const FIREBALL_START    = 0.08
 export const FIREBALL_PEAK     = 0.35
-export const FIREBALL_END      = 1.85
+export const FIREBALL_END      = 2.05
 export const FIREBALL_DURATION = FIREBALL_END - FIREBALL_START
 
 // ─── Shape ───────────────────────────────────────────────────────────────────
 // Larger radius creates an imposing visual mass; diverse baseScales create
 // large-medium-small hierarchy instead of uniform blobs.
 export const FIREBALL_MAX_RADIUS   = 2.8   // world units at peak (dominant lobe)
-export const FIREBALL_UPWARD_DRIFT = 1.25  // total upward travel over lifetime
+export const FIREBALL_UPWARD_DRIFT = 1.45  // total upward travel over lifetime
 export const FIREBALL_LOBE_COUNT   = 8
 
 // ─── Noise / surface ─────────────────────────────────────────────────────────
@@ -55,8 +55,8 @@ export const LOBE_DESCRIPTORS: LobeDesc[] = [
   // RIGHT dominant burst — hero lobe, largest, violent early ejection
   { offset: [ 1.20,  0.60, -0.35], baseScale: 0.88, seed:  1.31, delay: 0.02, expansionRate: 1.18, depth: 0.94, erosionThreshold: 0.24, isCore: false },
 
-  // LEFT large mass — major balancing mass, medium erosion
-  { offset: [-1.05,  0.75,  0.40], baseScale: 0.80, seed:  2.73, delay: 0.04, expansionRate: 0.90, depth: 0.80, erosionThreshold: 0.32, isCore: false },
+  // LEFT large mass — pushed further for stronger asymmetry, medium erosion
+  { offset: [-1.20,  0.85,  0.55], baseScale: 0.80, seed:  2.73, delay: 0.04, expansionRate: 0.90, depth: 0.80, erosionThreshold: 0.32, isCore: false },
 
   // UPPER PLUME — dominant vertical protrusion, wispy eroded top
   { offset: [ 0.30,  1.70, -0.20], baseScale: 0.68, seed:  4.17, delay: 0.06, expansionRate: 0.86, depth: 0.84, erosionThreshold: 0.40, isCore: false },
@@ -67,11 +67,11 @@ export const LOBE_DESCRIPTORS: LobeDesc[] = [
   // UPPER-LEFT secondary — slightly delayed, rear-mid depth
   { offset: [-1.15,  0.95,  0.18], baseScale: 0.63, seed:  6.89, delay: 0.11, expansionRate: 1.04, depth: 0.65, erosionThreshold: 0.44, isCore: false },
 
-  // BACK-DEPTH layer — deep rear, creates visual depth, heavily eroded
-  { offset: [-0.48,  0.48, -1.15], baseScale: 0.55, seed:  8.33, delay: 0.07, expansionRate: 0.95, depth: 0.62, erosionThreshold: 0.52, isCore: false },
+  // BACK-DEPTH layer — deep rear, very dark, creates strong front/back contrast
+  { offset: [-0.48,  0.48, -1.15], baseScale: 0.55, seed:  8.33, delay: 0.07, expansionRate: 0.95, depth: 0.50, erosionThreshold: 0.52, isCore: false },
 
-  // RIGHT-HIGH secondary burst — delayed, simulates secondary ignition
-  { offset: [ 0.70,  1.45,  0.42], baseScale: 0.58, seed:  9.71, delay: 0.14, expansionRate: 1.09, depth: 0.70, erosionThreshold: 0.48, isCore: false },
+  // RIGHT-HIGH secondary burst — clearly delayed (0.18s), larger = distinct event
+  { offset: [ 0.75,  1.50,  0.42], baseScale: 0.68, seed:  9.71, delay: 0.18, expansionRate: 1.09, depth: 0.70, erosionThreshold: 0.46, isCore: false },
 ]
 
 export const FIREBALL_ORIGIN: Vector3Tuple = EXPLOSION_ORIGIN
