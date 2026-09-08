@@ -1,14 +1,14 @@
 import ProjectCard from '../components/ProjectCard'
 import { PROJECTS } from '../data/projects'
 
-export default function FeaturedProjects() {
+export default function Tools() {
   return (
     <section
-      id="work"
-      aria-labelledby="work-heading"
+      id="tools"
+      aria-labelledby="tools-heading"
       style={{
         borderTop: '1px solid var(--rw-border)',
-        padding: '80px 0',
+        padding: '96px 0',
       }}
     >
       <div
@@ -18,20 +18,26 @@ export default function FeaturedProjects() {
           padding: '0 24px',
         }}
       >
-        <SectionLabel>Featured Projects</SectionLabel>
-
+        <p style={labelStyle}>Tools</p>
         <h2
-          id="work-heading"
+          id="tools-heading"
+          style={headingStyle}
+        >
+          Browser tools I've built
+        </h2>
+
+        <p
           style={{
-            fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-            fontWeight: 600,
-            letterSpacing: '-0.02em',
-            color: 'var(--rw-text-primary)',
-            margin: '0 0 48px',
+            fontSize: 15,
+            color: 'var(--rw-text-secondary)',
+            margin: '16px 0 48px',
+            maxWidth: 560,
+            lineHeight: 1.70,
           }}
         >
-          Tools I've built
-        </h2>
+          Standalone web applications for VFX and technical-art workflows, built with
+          Three.js and TypeScript.
+        </p>
 
         <div
           style={{
@@ -49,18 +55,18 @@ export default function FeaturedProjects() {
   )
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p
-      style={{
-        fontSize: 12,
-        letterSpacing: '0.1em',
-        textTransform: 'uppercase',
-        color: 'var(--rw-text-tertiary)',
-        marginBottom: 12,
-      }}
-    >
-      {children}
-    </p>
-  )
+const labelStyle: React.CSSProperties = {
+  fontSize: 12,
+  letterSpacing: '0.10em',
+  textTransform: 'uppercase',
+  color: 'var(--rw-text-tertiary)',
+  margin: '0 0 12px',
+}
+
+const headingStyle: React.CSSProperties = {
+  fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+  fontWeight: 600,
+  letterSpacing: '-0.02em',
+  color: 'var(--rw-text-primary)',
+  margin: 0,
 }

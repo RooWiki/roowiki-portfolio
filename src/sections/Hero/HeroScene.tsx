@@ -6,18 +6,17 @@ import { usePerformanceTier } from '../../hooks/usePerformanceTier'
 import { QUALITY_CONFIGS } from '../../lib/three/performanceConfig'
 import ExplosionScene from '../../vfx/ExplosionScene'
 
-// Runs once inside the Canvas to aim the camera at the explosion composition.
-// Lives here (not in ExplosionScene) because camera ownership belongs to the
-// scene host. Phase 3 camera shake will extend this component.
+// Sets the camera's initial orientation once on first frame.
+// CameraShake in ExplosionScene handles per-frame position perturbation.
 function CameraSetup() {
   const { camera } = useThree()
-  const didSetup = useRef(false)
+  const done = useRef(false)
 
   useFrame(() => {
-    if (didSetup.current) return
+    if (done.current) return
     camera.position.set(-0.5, 2.8, 9.5)
     camera.lookAt(1.8, 0.2, -1.5)
-    didSetup.current = true
+    done.current = true
   })
 
   return null
@@ -25,8 +24,8 @@ function CameraSetup() {
 
 export default function HeroScene() {
   const reducedMotion = useReducedMotion()
-  const tier = usePerformanceTier()
-  const dprMax = QUALITY_CONFIGS[tier].dprMax
+  const tier          = usePerformanceTier()
+  const dprMax        = QUALITY_CONFIGS[tier].dprMax
 
   const [tabHidden, setTabHidden] = useState(() => document.hidden)
 
@@ -42,6 +41,8 @@ export default function HeroScene() {
       ? 'never'
       : 'always'
 
+  const enablePostProcessing = QUALITY_CONFIGS[tier].enablePostProcessing && !reducedMotion
+
   return (
     <Canvas
       camera={{ fov: 55, near: 0.1, far: 60, position: [-0.5, 2.8, 9.5] }}
@@ -55,7 +56,11 @@ export default function HeroScene() {
       style={{ width: '100%', height: '100%', display: 'block' }}
     >
       <CameraSetup />
-      <ExplosionScene paused={reducedMotion} />
+      <ExplosionScene
+        paused={reducedMotion}
+        enablePostProcessing={enablePostProcessing}
+        tier={tier}
+      />
     </Canvas>
   )
 }

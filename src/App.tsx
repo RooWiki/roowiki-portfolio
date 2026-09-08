@@ -1,9 +1,12 @@
 import { useTheme } from './hooks/useTheme'
 import Header from './components/Header'
 import Hero from './sections/Hero/Hero'
-import FeaturedProjects from './sections/FeaturedProjects'
-import SelectedWork from './sections/SelectedWork'
 import About from './sections/About'
+import Software from './sections/Software'
+import Skills from './sections/Skills'
+import Tools from './sections/FeaturedProjects'
+import Projects from './sections/SelectedWork'
+import Contact from './sections/Contact'
 import Footer from './sections/Footer'
 
 export default function App() {
@@ -15,9 +18,12 @@ export default function App() {
 
       <main style={{ flex: 1 }}>
         <Hero />
-        <FeaturedProjects />
-        <SelectedWork />
         <About />
+        <Software />
+        <Skills />
+        <Tools />
+        <Projects />
+        <Contact />
       </main>
 
       <Footer />

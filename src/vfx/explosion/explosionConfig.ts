@@ -1,34 +1,55 @@
 import type { Vector3Tuple } from 'three'
 
 // Single authoritative world-space origin for all explosion systems.
-// Fireball, shockwave, sparks, debris, dust, and lighting all reference this.
 export const EXPLOSION_ORIGIN: Vector3Tuple = [2.2, 0.0, -1.5]
 
-// Cycle: how long between ignition events (development loop).
-// Later phases can change the trigger model (once-on-load, interaction-driven, etc.)
-// without touching individual VFX modules.
-export const CYCLE_DURATION = 8.0 // seconds
+// 15-second cycle: one explosive event (~6s active) + ~9s residual/idle.
+// Chosen to feel premium — not constantly repeating.
+export const CYCLE_DURATION = 15.0
 
-// Sub-timings within one cycle (seconds from cycle start).
-// Centralised here so Phase 3+ modules can be authored against the same clock.
+// ─── Master timeline (seconds from cycle start) ───────────────────────────────
 export const TIMING = {
-  // Ignition core
-  ignitionPeak: 0.05,  // sharp brightness peak
-  ignitionEnd:  0.18,  // core fully gone
-
-  // Flash / glow layers
+  // Ignition flash (Phase 2)
+  ignitionPeak: 0.05,
+  ignitionEnd:  0.18,
   flashPeak:    0.04,
   flashEnd:     0.25,
 
-  // Outer bloom approximation
-  bloomEnd:     0.32,
+  // Point light
+  lightPeak: 0.08,
+  lightEnd:  0.55,
 
-  // Dynamic point light
-  lightPeak:    0.08,
-  lightEnd:     0.65,
+  // Shockwave
+  shockwaveStart: 0.04,
+  shockwaveEnd:   0.38,
+
+  // Camera shake
+  shakeStart: 0.03,
+  shakeEnd:   0.70,
+  shakePeak:  0.06,
+
+  // Sparks / embers
+  sparksStart: 0.08,
+  sparksEnd:   2.80,
+
+  // Debris chunks
+  debrisStart: 0.08,
+  debrisEnd:   1.80,
+
+  // Ground dust burst
+  dustStart: 0.12,
+  dustEnd:   1.50,
+
+  // Smoke column (starts after fireball, persists long)
+  smokeStart: 0.25,
+  smokeEnd:   8.00,
+
+  // Scorch mark (fades in, stays resident)
+  scorchStart: 0.40,
+  scorchEnd:   13.00,
 } as const
 
-// Explosion point light parameters
-export const LIGHT_MAX_INTENSITY = 80
-export const LIGHT_DISTANCE      = 20   // world units, radius of influence
-export const LIGHT_DECAY         = 2    // physically-based inverse-square
+// ─── Explosion point light ────────────────────────────────────────────────────
+export const LIGHT_MAX_INTENSITY = 14
+export const LIGHT_DISTANCE      = 8    // tight radius — localized illumination
+export const LIGHT_DECAY         = 2

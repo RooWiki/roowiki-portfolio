@@ -1,21 +1,27 @@
 import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
+import type { QualityTier } from '../lib/three/performanceConfig'
 import { VfxEnvironment } from './environment/VfxEnvironment'
 import { IgnitionFlash } from './explosion/IgnitionFlash'
 import { ExplosionLight } from './explosion/ExplosionLight'
+import { Fireball } from './explosion/Fireball/Fireball'
+import { Shockwave } from './explosion/Shockwave'
+import { Sparks } from './explosion/Sparks'
+import { GroundDust } from './explosion/GroundDust'
+import { Debris } from './explosion/Debris'
+import { Smoke } from './explosion/Smoke'
+import { ScorchMark } from './explosion/ScorchMark'
+import { CameraShake } from './CameraShake'
+import { PostFx } from './PostFx'
 import { CYCLE_DURATION } from './explosion/explosionConfig'
 
-// Future modules (fireball, smoke, sparks, debris, shockwave, ground dust,
-// heat distortion, scorch, camera shake) will be added here as siblings,
-// each consuming the same clockRef and cycleDuration.
-
 interface Props {
-  paused: boolean
+  paused:               boolean
+  enablePostProcessing: boolean
+  tier:                 QualityTier
 }
 
-export default function ExplosionScene({ paused }: Props) {
-  // Master elapsed clock — a plain ref, never written to React state.
-  // All child VFX systems read this to derive their own cycle time.
+export default function ExplosionScene({ paused, enablePostProcessing, tier }: Props) {
   const elapsedRef = useRef(0)
 
   useFrame((_state, delta) => {
@@ -27,8 +33,19 @@ export default function ExplosionScene({ paused }: Props) {
   return (
     <>
       <VfxEnvironment />
+      <ScorchMark  clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} />
       <IgnitionFlash clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} />
       <ExplosionLight clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} />
+      <Shockwave   clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} />
+      <Fireball    clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} tier={tier} />
+      <GroundDust  clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} tier={tier} />
+      <Sparks      clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} tier={tier} />
+      <Debris      clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} tier={tier} />
+      <Smoke       clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} tier={tier} />
+      <CameraShake clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} />
+      {enablePostProcessing && (
+        <PostFx tier={tier} clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} />
+      )}
     </>
   )
 }

@@ -7,9 +7,12 @@ interface HeaderProps {
 }
 
 const NAV_LINKS = [
-  { label: 'Work', href: '#work' },
-  { label: 'About', href: '#about' },
-  { label: 'Links', href: '#links' },
+  { label: 'About',    href: '#about'    },
+  { label: 'Software', href: '#software' },
+  { label: 'Skills',   href: '#skills'   },
+  { label: 'Tools',    href: '#tools'    },
+  { label: 'Projects', href: '#projects' },
+  { label: 'Contact',  href: '#contact'  },
 ]
 
 export default function Header({ theme, onToggleTheme }: HeaderProps) {
@@ -32,7 +35,7 @@ export default function Header({ theme, onToggleTheme }: HeaderProps) {
           height: 56,
           display: 'flex',
           alignItems: 'center',
-          gap: 24,
+          gap: 4,
         }}
       >
         {/* Brand */}
@@ -49,12 +52,18 @@ export default function Header({ theme, onToggleTheme }: HeaderProps) {
           RooWiki
         </a>
 
-        {/* Nav */}
-        <nav aria-label="Main navigation">
+        {/* Nav — hidden on small screens; visible from md up */}
+        <nav
+          aria-label="Main navigation"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
           <ul
             style={{
               display: 'flex',
-              gap: 4,
+              gap: 2,
               listStyle: 'none',
               margin: 0,
               padding: 0,
@@ -66,11 +75,12 @@ export default function Header({ theme, onToggleTheme }: HeaderProps) {
                   href={href}
                   style={{
                     display: 'block',
-                    padding: '6px 10px',
-                    fontSize: 14,
+                    padding: '6px 9px',
+                    fontSize: 13,
                     color: 'var(--rw-text-secondary)',
                     borderRadius: 6,
                     transition: 'color 0.15s ease, background-color 0.15s ease',
+                    whiteSpace: 'nowrap',
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.color = 'var(--rw-text-primary)'
