@@ -84,6 +84,5 @@
   z-index: -1;
   pointer-events: none;
   background: var(--rw-bg);
-  mask-image: linear-gradient(to right, transparent, #000 80px, #000 calc(100% - 80px), transparent), linear-gradient(to bottom, transparent, #000 88px, #000 calc(100% - 88px), transparent);
-  mask-composite: intersect;
+  mask-image: radial-gradient(ellipse closest-side, #000 62%, rgba(0,0,0,.96) 70%, rgba(0,0,0,.72) 80%, rgba(0,0,0,.28) 91%, transparent 100%);
 }
