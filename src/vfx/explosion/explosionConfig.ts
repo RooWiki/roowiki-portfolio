@@ -16,7 +16,7 @@ export const TIMING = {
 
   // Point light — brief, intense, wider radius
   lightPeak: 0.08,
-  lightEnd:  0.60,
+  lightEnd:  0.35,
 
   // Shockwave
   shockwaveStart: 0.04,

@@ -4,6 +4,7 @@ import type { QualityTier } from '../lib/three/performanceConfig'
 import { VfxEnvironment } from './environment/VfxEnvironment'
 import { IgnitionFlash } from './explosion/IgnitionFlash'
 import { ExplosionLight } from './explosion/ExplosionLight'
+import { GroundFireReflection } from './explosion/GroundFireReflection'
 import { VolumetricFire } from './explosion/VolumetricFire/VolumetricFire'
 import { Sparks } from './explosion/Sparks'
 import { SparkStreaks } from './explosion/SparkStreaks'
@@ -12,6 +13,7 @@ import { Debris } from './explosion/Debris'
 import { ScorchMark } from './explosion/ScorchMark'
 import { CameraShake } from './CameraShake'
 import { PostFx } from './PostFx'
+import { DevPerfCanvas } from './devPerfHud'
 import { CYCLE_DURATION } from './explosion/explosionConfig'
 import { getDevVfxTime } from './devInspect'
 
@@ -34,6 +36,7 @@ interface Props {
   enablePostProcessing: boolean
   tier:                 QualityTier
   onCycleComplete?:     () => void
+  onFps?:               (fps: number) => void
   // Increment to trigger a clock reset (replay)
   resetSignal?:         number
 }
@@ -43,6 +46,7 @@ export default function ExplosionScene({
   enablePostProcessing,
   tier,
   onCycleComplete,
+  onFps,
   resetSignal,
 }: Props) {
   // Dev-only: ?vfxTime=N freezes the clock at a specific second
@@ -78,10 +82,12 @@ export default function ExplosionScene({
 
   return (
     <>
+      <DevPerfCanvas tier={tier} onFps={onFps} />
       <VfxEnvironment />
-      <ScorchMark    clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} />
-      <IgnitionFlash clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} />
-      <ExplosionLight clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} />
+      <ScorchMark         clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} />
+      <GroundFireReflection clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} />
+      <IgnitionFlash      clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} />
+      <ExplosionLight     clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} />
 
       {USE_VOLUMETRIC ? (
         <VolumetricFire clockRef={elapsedRef} cycleDuration={CYCLE_DURATION} tier={tier} />

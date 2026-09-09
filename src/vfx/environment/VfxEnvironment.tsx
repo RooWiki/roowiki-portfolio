@@ -20,7 +20,7 @@ export function VfxEnvironment() {
         <planeGeometry args={[100, 100]} />
         <meshStandardMaterial
           color="#0d0f12"
-          roughness={0.94}
+          roughness={0.82}
           metalness={0.02}
         />
       </mesh>

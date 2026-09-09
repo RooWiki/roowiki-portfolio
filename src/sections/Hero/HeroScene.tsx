@@ -3,8 +3,9 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { FogExp2 } from 'three'
 import { ENV_BG_HEX, ENV_FOG_DENSITY } from '../../vfx/environment/environmentConfig'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
-import { usePerformanceTier } from '../../hooks/usePerformanceTier'
+import { useAdaptiveTier } from '../../hooks/useAdaptiveTier'
 import { QUALITY_CONFIGS } from '../../lib/three/performanceConfig'
+import { DevPerfOverlay } from '../../vfx/devPerfHud'
 import ExplosionScene from '../../vfx/ExplosionScene'
 
 function CameraSetup() {
@@ -22,9 +23,9 @@ function CameraSetup() {
 }
 
 export default function HeroScene() {
-  const reducedMotion = useReducedMotion()
-  const tier          = usePerformanceTier()
-  const dprMax        = QUALITY_CONFIGS[tier].dprMax
+  const reducedMotion    = useReducedMotion()
+  const { tier, onFps } = useAdaptiveTier()
+  const dprMax           = QUALITY_CONFIGS[tier].dprMax
 
   const [tabHidden,   setTabHidden]   = useState(() => document.hidden)
   const [showReplay,  setShowReplay]  = useState(false)
@@ -72,9 +73,12 @@ export default function HeroScene() {
           enablePostProcessing={enablePostProcessing}
           tier={tier}
           onCycleComplete={handleCycleComplete}
+          onFps={onFps}
           resetSignal={resetSignal}
         />
       </Canvas>
+
+      <DevPerfOverlay />
 
       {showReplay && (
         <button

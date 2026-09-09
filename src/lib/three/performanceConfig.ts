@@ -9,7 +9,7 @@ export interface QualityConfig {
 
 export const QUALITY_CONFIGS: Record<QualityTier, QualityConfig> = {
   high: {
-    dprMax: 2,
+    dprMax: 1.5,
     particleCount: 5000,
     enableDistortion: true,
     enablePostProcessing: true,

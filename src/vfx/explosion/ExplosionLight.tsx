@@ -10,13 +10,13 @@ import {
 } from './explosionConfig'
 import { sharpEnvelope, envelope } from './ExplosionTimeline'
 
-// Afterglow: low-intensity warm light that lingers through the fireball and into
-// the smoke phase, illuminating smoke from below during the aftermath.
-const AFTERGLOW_INTENSITY = 4.0
-const AFTERGLOW_DISTANCE  = 12
+// Afterglow: warm orange light that lingers through the fireball and deep into
+// the smoke phase, illuminating the rising column from below.
+const AFTERGLOW_INTENSITY = 6.0
+const AFTERGLOW_DISTANCE  = 14
 const AFTERGLOW_START     = 0.20  // begins rising with the fireball
 const AFTERGLOW_PEAK      = 0.90  // full orange warmth
-const AFTERGLOW_END       = 4.00  // fades as smoke darkens
+const AFTERGLOW_END       = 5.00  // fades well into the smoke phase
 
 interface Props {
   clockRef: { current: number }
@@ -60,7 +60,7 @@ export function ExplosionLight({ clockRef, cycleDuration }: Props) {
 
   return (
     <>
-      {/* Main burst: at explosion origin, white-hot, very tight decay */}
+      {/* Main burst: white-hot detonation flash, no shadows (too brief to matter) */}
       <pointLight
         ref={burstRef}
         position={EXPLOSION_ORIGIN}
@@ -68,8 +68,9 @@ export function ExplosionLight({ clockRef, cycleDuration }: Props) {
         distance={LIGHT_DISTANCE}
         decay={LIGHT_DECAY}
         color="white"
+        castShadow={false}
       />
-      {/* Afterglow: elevated above ground at fireball center, warm orange */}
+      {/* Afterglow: elevated warm-orange glow, illuminates smoke column from below */}
       <pointLight
         ref={afterglowRef}
         position={[EXPLOSION_ORIGIN[0], EXPLOSION_ORIGIN[1] + 1.4, EXPLOSION_ORIGIN[2]]}
@@ -77,6 +78,7 @@ export function ExplosionLight({ clockRef, cycleDuration }: Props) {
         distance={AFTERGLOW_DISTANCE}
         decay={LIGHT_DECAY}
         color="#ff4000"
+        castShadow={false}
       />
     </>
   )
