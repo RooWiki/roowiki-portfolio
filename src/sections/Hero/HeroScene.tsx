@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { FogExp2 } from 'three'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
@@ -6,8 +6,6 @@ import { usePerformanceTier } from '../../hooks/usePerformanceTier'
 import { QUALITY_CONFIGS } from '../../lib/three/performanceConfig'
 import ExplosionScene from '../../vfx/ExplosionScene'
 
-// Sets the camera's initial orientation once on first frame.
-// CameraShake in ExplosionScene handles per-frame position perturbation.
 function CameraSetup() {
   const { camera } = useThree()
   const done = useRef(false)
@@ -15,8 +13,6 @@ function CameraSetup() {
   useFrame(() => {
     if (done.current) return
     camera.position.set(-0.5, 2.8, 9.5)
-    // Looking slightly higher (0.5 vs 0.2) and right (2.0 vs 1.8): better frames
-    // the fireball which now rises 1.4+ world units above the explosion origin.
     camera.lookAt(2.0, 0.5, -1.5)
     done.current = true
   })
@@ -29,7 +25,9 @@ export default function HeroScene() {
   const tier          = usePerformanceTier()
   const dprMax        = QUALITY_CONFIGS[tier].dprMax
 
-  const [tabHidden, setTabHidden] = useState(() => document.hidden)
+  const [tabHidden,   setTabHidden]   = useState(() => document.hidden)
+  const [showReplay,  setShowReplay]  = useState(false)
+  const [resetSignal, setResetSignal] = useState(0)
 
   useEffect(() => {
     const handler = () => setTabHidden(document.hidden)
@@ -45,24 +43,85 @@ export default function HeroScene() {
 
   const enablePostProcessing = QUALITY_CONFIGS[tier].enablePostProcessing && !reducedMotion
 
+  const handleCycleComplete = useCallback(() => {
+    setShowReplay(true)
+  }, [])
+
+  const handleReplay = useCallback(() => {
+    setResetSignal(s => s + 1)
+    setShowReplay(false)
+  }, [])
+
   return (
-    <Canvas
-      camera={{ fov: 55, near: 0.1, far: 60, position: [-0.5, 2.8, 9.5] }}
-      dpr={[1, dprMax] as [number, number]}
-      gl={{ antialias: true, powerPreference: 'high-performance' }}
-      frameloop={frameloop}
-      onCreated={({ gl, scene }) => {
-        gl.setClearColor(0x08080a, 1)
-        scene.fog = new FogExp2(0x08080a, 0.038)
-      }}
-      style={{ width: '100%', height: '100%', display: 'block' }}
-    >
-      <CameraSetup />
-      <ExplosionScene
-        paused={reducedMotion}
-        enablePostProcessing={enablePostProcessing}
-        tier={tier}
-      />
-    </Canvas>
+    <>
+      <Canvas
+        camera={{ fov: 55, near: 0.1, far: 60, position: [-0.5, 2.8, 9.5] }}
+        dpr={[1, dprMax] as [number, number]}
+        gl={{ antialias: true, powerPreference: 'high-performance' }}
+        frameloop={frameloop}
+        onCreated={({ gl, scene }) => {
+          gl.setClearColor(0x08080a, 1)
+          scene.fog = new FogExp2(0x08080a, 0.038)
+        }}
+        style={{ width: '100%', height: '100%', display: 'block' }}
+      >
+        <CameraSetup />
+        <ExplosionScene
+          paused={reducedMotion}
+          enablePostProcessing={enablePostProcessing}
+          tier={tier}
+          onCycleComplete={handleCycleComplete}
+          resetSignal={resetSignal}
+        />
+      </Canvas>
+
+      {showReplay && (
+        <button
+          onClick={handleReplay}
+          aria-label="Replay explosion"
+          style={{
+            position: 'absolute',
+            bottom: 28,
+            right: 28,
+            zIndex: 10,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '10px 18px',
+            fontSize: 13,
+            fontWeight: 500,
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+            color: 'rgba(242, 242, 247, 0.70)',
+            background: 'rgba(8, 8, 10, 0.55)',
+            border: '1px solid rgba(242, 242, 247, 0.18)',
+            borderRadius: 8,
+            backdropFilter: 'blur(8px)',
+            cursor: 'pointer',
+            pointerEvents: 'auto',
+            transition: 'color 0.2s, border-color 0.2s',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = 'rgba(242, 242, 247, 0.95)'
+            e.currentTarget.style.borderColor = 'rgba(242, 242, 247, 0.40)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = 'rgba(242, 242, 247, 0.70)'
+            e.currentTarget.style.borderColor = 'rgba(242, 242, 247, 0.18)'
+          }}
+        >
+          <svg
+            width="14" height="14" viewBox="0 0 14 14"
+            fill="none" stroke="currentColor" strokeWidth="1.5"
+            strokeLinecap="round" strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12.5 2.5A6 6 0 1 1 7 1" />
+            <polyline points="7 1 10 1 10 4" />
+          </svg>
+          Replay
+        </button>
+      )}
+    </>
   )
 }

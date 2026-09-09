@@ -1,32 +1,12 @@
-// Volumetric fire + smoke raymarching shader.
+// Volumetric fire + smoke raymarching shader — v2.
 //
-// Architecture: a unit cube ([-0.5, 0.5]³) rendered with side=BackSide so the
-// fragment always exists regardless of camera position.  The fragment shader
-// casts a ray from cameraPosition through the fragment world position, clips
-// the ray against the animated world-space AABB (uBoxMin / uBoxMax), then
-// marches the ray accumulating emission (fire) and extinction (smoke).
-//
-// Density field: domain-warped FBM — a procedural 3-D noise evaluated at the
-// animated position (upward drift).  Domain warping produces the turbulent,
-// chaotic shapes of a real explosion without GPU fluid simulation.
-//
-// Temperature field: a radial heat gradient that peaks at the rising explosion
-// centre, decays over time, and mixes with the density to create the
-// fire → smoke transition.  High-temperature regions emit fire colour;
-// low-temperature / late-time regions contribute dark smoke extinction.
-//
-// Uniforms driven each frame from VolumetricFire.tsx:
-//   uBoxMin, uBoxMax  — world-space AABB (grows as fire expands)
-//   uExplosionOrigin  — fixed world position
-//   uSysT             — seconds since VOL_START
-//   uFireNorm         — 0→1 over fire phase (controls fire fade-out)
-//   uSmokeNorm        — 0→1 over smoke phase (controls smoke fade-in)
-//   uExpRadius        — current explosion radius (world units)
-//   uColorHot etc.    — fire/smoke colour ramp
-//
-// Defines injected per quality tier (ShaderMaterial.defines):
-//   MAX_STEPS  — compile-time loop bound (96 / 64 / 32)
-//   OCTAVES    — FBM octave count (4 / 3 / 2)
+// Key improvements over v1:
+//   - Noise-modulated ellipsoidal boundary: breaks up the sphere silhouette,
+//     produces the lumpy, irregular fire mass with visible cavities
+//   - Directional blast shape: taller than wide (aspect 1.35:1 Y vs XZ)
+//   - Ground clip: density smoothly zeroed below explosion origin Y
+//   - Height-based smoke illumination: warm glow at base, dark soot aloft
+//   - Stronger fire contrast via softened core luminance boost
 
 export const volumetricVertexShader = /* glsl */`
 varying vec3 vWP;
@@ -39,8 +19,7 @@ void main() {
 `
 
 export const volumetricFragmentShader = /* glsl */`
-// ── Built-in: Three.js injects cameraPosition automatically ─────────────────
-// uniform vec3 cameraPosition;   (already provided by WebGLRenderer)
+// cameraPosition: injected by Three.js WebGLRenderer into all ShaderMaterials
 
 // ── Animated bounding box ────────────────────────────────────────────────────
 uniform vec3  uBoxMin;
@@ -48,35 +27,33 @@ uniform vec3  uBoxMax;
 
 // ── Explosion state ──────────────────────────────────────────────────────────
 uniform vec3  uExplosionOrigin;
-uniform float uSysT;          // time since ignition
+uniform float uSysT;
 uniform float uFireNorm;      // 0→1 over fire lifetime
 uniform float uSmokeNorm;     // 0→1 over smoke fade-in
-uniform float uExpRadius;     // current expanding radius (world units)
+uniform float uExpRadius;     // current expanding radius
 
 // ── Fire colour ramp ─────────────────────────────────────────────────────────
-uniform vec3 uColorHot;       // white-yellow core
-uniform vec3 uColorBright;    // bright yellow
-uniform vec3 uColorMid;       // dominant orange
-uniform vec3 uColorCool;      // deep red-orange
-uniform vec3 uColorDead;      // dark ember
+uniform vec3 uColorHot;
+uniform vec3 uColorBright;
+uniform vec3 uColorMid;
+uniform vec3 uColorCool;
+uniform vec3 uColorDead;
 
 // ── Smoke colour ─────────────────────────────────────────────────────────────
-uniform vec3 uSmokeColor;     // cold soot / dark gray
+uniform vec3 uSmokeColor;
 
 varying vec3 vWP;
 
 // ────────────────────────────────────────────────────────────────────────────
-// Noise functions
+// Noise
 // ────────────────────────────────────────────────────────────────────────────
 
-// Fast hash — avoids sin/cos for GPU precision safety
 float hash3(vec3 p) {
   p = fract(p * vec3(0.10313, 0.10301, 0.09731));
   p += dot(p, p.yxz + 33.33);
   return fract((p.x + p.y) * p.z);
 }
 
-// Smooth value noise 3D (quintic interpolation)
 float noise3(vec3 p) {
   vec3 i = floor(p);
   vec3 f = fract(p);
@@ -90,7 +67,6 @@ float noise3(vec3 p) {
   );
 }
 
-// FBM — signed output [-0.5, 0.5] (used for domain warp offsets)
 float fbmSigned(vec3 p) {
   float v = 0.0, a = 0.5;
   for (int i = 0; i < OCTAVES; i++) {
@@ -98,10 +74,9 @@ float fbmSigned(vec3 p) {
     p  = p * 2.3 + vec3(47.12, 31.41, 23.72);
     a *= 0.5;
   }
-  return v;   // range approx [-1, 1], practical range ~[-0.5, 0.5]
+  return v;
 }
 
-// FBM — unsigned output [0, 1]
 float fbm(vec3 p) {
   float v = 0.0, a = 0.5;
   for (int i = 0; i < OCTAVES; i++) {
@@ -109,28 +84,23 @@ float fbm(vec3 p) {
     p  = p * 2.3 + vec3(47.12, 31.41, 23.72);
     a *= 0.5;
   }
-  return v * 1.333;   // normalize so full-amplitude gives ~1
+  return v * 1.333;
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// Domain-warped density field
-// Upward drift + double-warp creates turbulent fire shapes with natural cavities
+// Domain-warped density
 // ────────────────────────────────────────────────────────────────────────────
 float densityAt(vec3 wp) {
   float drift = uSysT * 0.82;
-
-  // Base sampling scale: looser = chunkier billows
   vec3 p = wp * 0.68;
   p.y   -= drift;
 
-  // First domain warp — large-scale structure
   vec3 q = vec3(
     fbmSigned(p),
     fbmSigned(p + vec3(4.31, 1.72, 2.93)),
     fbmSigned(p + vec3(8.60, 5.21, 6.14))
   );
 
-  // Second domain warp — finer turbulence
   vec3 r = vec3(
     fbmSigned(p + q * 0.70 + vec3(0.0, -drift * 0.4, 0.0)),
     fbmSigned(p + q * 0.70 + vec3(3.11, 1.18, 2.07)),
@@ -141,7 +111,7 @@ float densityAt(vec3 wp) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// Fire colour ramp — temperature 0..1 → colour
+// Fire colour ramp
 // ────────────────────────────────────────────────────────────────────────────
 vec3 fireRamp(float t) {
   if (t > 0.82) return mix(uColorBright, uColorHot,    (t - 0.82) / 0.18);
@@ -151,8 +121,7 @@ vec3 fireRamp(float t) {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// Ray – AABB intersection  (world space)
-// Returns vec2(tNear, tFar).  tFar < tNear means no intersection.
+// Ray – AABB intersection
 // ────────────────────────────────────────────────────────────────────────────
 vec2 hitAABB(vec3 ro, vec3 rd) {
   vec3 t0 = (uBoxMin - ro) / rd;
@@ -166,10 +135,8 @@ vec2 hitAABB(vec3 ro, vec3 rd) {
 // Main
 // ────────────────────────────────────────────────────────────────────────────
 void main() {
-  // Ray from camera through the back face of the box
-  vec3 rd = normalize(vWP - cameraPosition);
+  vec3 rd  = normalize(vWP - cameraPosition);
   vec2 hit = hitAABB(cameraPosition, rd);
-
   if (hit.x > hit.y || hit.y < 0.0) discard;
 
   float tA      = max(hit.x, 0.001);
@@ -177,48 +144,62 @@ void main() {
   float stepLen = (tB - tA) / float(MAX_STEPS);
 
   vec3  col = vec3(0.0);
-  float T   = 1.0;   // transmittance (1 = fully transparent)
+  float T   = 1.0;
 
   for (int i = 0; i < MAX_STEPS; i++) {
     float t  = tA + (float(i) + 0.5) * stepLen;
     vec3  sp = cameraPosition + rd * t;
 
-    // ── Radial envelope: keeps density inside the expanding fireball ────────
-    float rise   = uSysT * 0.55;
-    vec3  ctr    = uExplosionOrigin + vec3(0.0, rise, 0.0);
-    float dist   = length(sp - ctr);
-    float invRad = 1.0 / max(uExpRadius, 0.3);
+    // ── Rising explosion centre ──────────────────────────────────────────────
+    float rise = uSysT * 0.55;
+    vec3  ctr  = uExplosionOrigin + vec3(0.0, rise, 0.0);
+    vec3  rel  = sp - ctr;
+
+    // ── Noise-modulated ellipsoidal boundary ─────────────────────────────────
+    // Ellipse: taller than wide (Y scaled down = blast reads taller)
+    float ASPECT = 1.35;
+    vec3  scaled = vec3(rel.x, rel.y / ASPECT, rel.z);
+    float dist   = length(scaled);
+
+    // Low-frequency boundary perturbation — breaks sphere into lumps
+    float boundary = noise3(sp * 0.18 + vec3(0.0, -uSysT * 0.3, 0.0));
+    float effRad   = max(uExpRadius * (0.72 + boundary * 0.56), 0.3);
+    float invRad   = 1.0 / effRad;
 
     float sphereEnv = max(0.0, 1.0 - dist * invRad);
-    sphereEnv = sphereEnv * sphereEnv;   // quadratic — sharper boundary
+    sphereEnv = sphereEnv * sphereEnv;
 
-    // ── Density ─────────────────────────────────────────────────────────────
-    float dens = densityAt(sp) * sphereEnv;
+    // ── Ground clip: no fire underground ─────────────────────────────────────
+    float groundClip = smoothstep(uExplosionOrigin.y - 0.15, uExplosionOrigin.y + 0.55, sp.y);
+
+    // ── Density ──────────────────────────────────────────────────────────────
+    float dens = densityAt(sp) * sphereEnv * groundClip;
     if (dens < 0.04) continue;
 
-    // ── Temperature: radial heat + noise contribution ─────────────────────
-    float heat = exp(-dist * invRad * 2.2) * (1.0 - uFireNorm * 0.95);
-    float temp = clamp(heat * 0.80 + dens * 0.20, 0.0, 1.0);
+    // ── Temperature ──────────────────────────────────────────────────────────
+    // Hot near origin, cools radially + temporally
+    float radHeat  = exp(-dist * invRad * 2.0) * (1.0 - uFireNorm * 0.95);
+    float temp     = clamp(radHeat * 0.82 + dens * 0.18, 0.0, 1.0);
 
-    // ── Fire emission (high-temperature regions) ──────────────────────────
-    float fireW = max(0.0, temp - 0.10) * max(0.0, 1.0 - uFireNorm * 1.3);
+    // ── Fire emission ─────────────────────────────────────────────────────────
+    float fireW = max(0.0, temp - 0.08) * max(0.0, 1.0 - uFireNorm * 1.25);
     if (fireW > 0.0) {
-      vec3 fCol = fireRamp(temp);
-      // Brighter close to explosion centre, dimmer at fringe
-      float emit = fireW * dens * stepLen * 7.5;
-      col += T * fCol * emit;
+      // Core brightness boost: hotter in the inner quarter
+      float coreLum = max(0.0, 1.0 - dist * invRad * 3.5);
+      vec3  fCol    = fireRamp(temp + coreLum * 0.15);
+      col += T * fCol * fireW * dens * stepLen * 8.0;
     }
 
-    // ── Smoke extinction + ambient in-scatter ─────────────────────────────
-    // Smoke is density that survives after fire cools (low temp or late time)
-    float smokeDens = dens * (0.25 + uSmokeNorm * 0.75) * (1.0 - temp * 0.65);
-    float ext = smokeDens * stepLen * 3.2;
-    T *= exp(-ext);
+    // ── Smoke extinction + height-aware in-scatter ────────────────────────────
+    float smokeDens = dens * (0.22 + uSmokeNorm * 0.78) * (1.0 - temp * 0.70);
+    T *= exp(-smokeDens * stepLen * 3.4);
 
-    // Warm in-scatter from residual fire glow, otherwise dark soot
-    float glowW = max(0.0, heat * 1.8) * (1.0 - uFireNorm);
-    vec3  ambSmoke = mix(uSmokeColor, vec3(0.28, 0.09, 0.02), glowW);
-    col += T * ambSmoke * smokeDens * stepLen * 0.55;
+    // Smoke illumination: warm ember glow near base, dark soot aloft
+    float height    = clamp((sp.y - uExplosionOrigin.y) / 4.5, 0.0, 1.0);
+    float glowW     = max(0.0, radHeat * 1.6) * (1.0 - uFireNorm);
+    vec3  baseGlow  = mix(uSmokeColor, vec3(0.32, 0.11, 0.02), glowW);
+    vec3  smokeAmb  = mix(baseGlow, uSmokeColor * 0.4, height * uSmokeNorm);
+    col += T * smokeAmb * smokeDens * stepLen * 0.55;
 
     if (T < 0.008) break;
   }

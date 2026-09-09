@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { CircleGeometry, ShaderMaterial, Mesh } from 'three'
 import { EXPLOSION_ORIGIN, TIMING } from './explosionConfig'
 
-const SCORCH_RADIUS = 3.0
+const SCORCH_RADIUS = 3.2
 
 const vertexShader = /* glsl */`
 varying vec2 vUv;
@@ -15,45 +15,68 @@ void main() {
 
 const fragmentShader = /* glsl */`
 uniform float uAlpha;
+uniform float uGlow;  // 0→1 ember heat glow (early aftermath)
+
 varying vec2 vUv;
 
-float hash(vec2 p) {
+float hash2(vec2 p) {
   p = fract(p * vec2(127.1, 311.7));
   p += dot(p, p.yx + 19.19);
   return fract((p.x + p.y) * p.x);
 }
 
+float hash3(vec2 p) {
+  p = fract(p * vec2(443.9, 183.1));
+  p += dot(p, p.yx + 37.31);
+  return fract((p.x + p.y) * p.y);
+}
+
 void main() {
-  vec2 uv = vUv - 0.5;         // center at 0,0
-  float dist = length(uv);     // 0 = center, 0.5 = edge
+  vec2  uv   = vUv - 0.5;
+  float dist = length(uv);
+  float angle = atan(uv.y, uv.x);
 
-  // Radial fade with organic edge
-  float radial = 1.0 - smoothstep(0.22, 0.50, dist);
+  // Irregular outer boundary — two noise scales
+  float ne1 = hash2(vec2(angle * 5.0, dist * 12.0));  // fine irregularity
+  float ne2 = hash3(vec2(angle * 2.0, dist * 5.5));   // coarse lobe shape
+  float ne3 = hash2(vec2(angle * 0.8, dist * 2.2));   // largest lobe
+  float boundary = ne1 * 0.20 + ne2 * 0.40 + ne3 * 0.40;
 
-  // Multi-scale edge noise for irregular scorch boundary
-  float angle  = atan(uv.y, uv.x);
-  float noise1 = hash(vec2(angle * 4.0,  dist * 10.0));  // fine edge
-  float noise2 = hash(vec2(angle * 1.5,  dist * 4.0));   // coarse shape
-  float noise  = noise1 * 0.40 + noise2 * 0.60;
+  // Radial falloff: center 0→0.22 = full char, 0.22→0.50 = edge heat stain
+  float outerEdge = 0.42 + boundary * 0.12;
+  float radial    = 1.0 - smoothstep(0.18, outerEdge, dist);
+  if (radial < 0.004) discard;
 
-  // Inner char (darker) vs outer heat stain (slightly lighter)
-  float innerMask = 1.0 - smoothstep(0.10, 0.20, dist);
-  float irregular  = radial * (0.55 + noise * 0.45);
+  // Interior detail — fine cracked char texture
+  float innerNoise = hash2(vec2(angle * 18.0, dist * 30.0)) * 0.3
+                   + hash3(vec2(angle * 9.0,  dist * 16.0)) * 0.7;
 
-  // Dark burnt center, slightly less dark at edges (heat stain effect)
-  vec3 center = vec3(0.020, 0.008, 0.003);
-  vec3 edge   = vec3(0.040, 0.018, 0.006);
-  vec3 color  = mix(edge, center, innerMask);
+  float innerMask  = 1.0 - smoothstep(0.08, 0.20, dist);
+  float charDetail = innerMask * (0.60 + innerNoise * 0.40);
 
-  gl_FragColor = vec4(color, irregular * uAlpha * 0.90);
+  // Color: deep charred center, slightly warm brownish edge
+  vec3 charBlack = vec3(0.016, 0.006, 0.002);
+  vec3 heatEdge  = vec3(0.042, 0.018, 0.006);
+  vec3 baseColor = mix(heatEdge, charBlack, charDetail);
+
+  // Ember glow overlay: faint orange in the inner char zone, early aftermath only
+  float glowZone   = max(0.0, 1.0 - dist / 0.22);
+  glowZone         = glowZone * glowZone;
+  vec3  emberColor = vec3(0.60, 0.12, 0.01);
+  vec3  color      = baseColor + emberColor * glowZone * uGlow * 0.55;
+
+  gl_FragColor = vec4(color, radial * uAlpha * 0.88);
 }
 `
 
-const _geo = new CircleGeometry(SCORCH_RADIUS, 48)
+const _geo = new CircleGeometry(SCORCH_RADIUS, 64)
 const _mat = new ShaderMaterial({
   vertexShader,
   fragmentShader,
-  uniforms: { uAlpha: { value: 0 } },
+  uniforms: {
+    uAlpha: { value: 0 },
+    uGlow:  { value: 0 },
+  },
   transparent: true,
   depthWrite:  false,
 })
@@ -69,6 +92,7 @@ export function ScorchMark({ clockRef, cycleDuration }: Props) {
 
   useFrame(() => {
     if (!meshRef.current) return
+
     const t    = clockRef.current % cycleDuration
     const sysT = t - TIMING.scorchStart
     const dur  = TIMING.scorchEnd - TIMING.scorchStart
@@ -80,16 +104,20 @@ export function ScorchMark({ clockRef, cycleDuration }: Props) {
     }
     meshRef.current.visible = true
 
-    // Fade in quickly, persist for cycle remainder, fade out near cycle end
+    // Fade in: quick, over 0.6s
     let alpha: number
     if (sysT < 0.6) {
-      alpha = sysT / 0.6                 // quick fade-in
-    } else if (sysT < dur - 1.5) {
-      alpha = 1.0                         // full opacity
+      alpha = sysT / 0.6
+    } else if (sysT < dur - 1.8) {
+      alpha = 1.0
     } else {
-      alpha = (dur - sysT) / 1.5         // fade out at end
+      alpha = Math.max(0, (dur - sysT) / 1.8)
     }
-    matRef.current.uniforms.uAlpha.value = Math.max(0, alpha) * 0.65
+    matRef.current.uniforms.uAlpha.value = alpha * 0.68
+
+    // Ember glow: peaks during fire phase (first 2s), fades by 5s
+    const glowW = Math.max(0, 1.0 - sysT / 4.5)
+    matRef.current.uniforms.uGlow.value = glowW
   })
 
   return (

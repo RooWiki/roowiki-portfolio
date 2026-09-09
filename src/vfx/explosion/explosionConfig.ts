@@ -43,9 +43,9 @@ export const TIMING = {
   smokeStart: 0.18,
   smokeEnd:   8.50,
 
-  // Scorch mark (fades in, stays resident)
+  // Scorch mark (fades in, stays resident through entire aftermath)
   scorchStart: 0.35,
-  scorchEnd:   13.00,
+  scorchEnd:   14.50,
 } as const
 
 // ─── Explosion point light ────────────────────────────────────────────────────
