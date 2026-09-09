@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap');
+
+.rw-explosion-hero {
+  position: relative;
+  height: min(850px, 100svh);
+  min-height: 540px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #1d1d1d;
+}
+.rw-explosion-visual {
+  position: absolute;
+  width: 66%;
+  height: 100%;
+  left: -7%;
+  top: 0;
+  pointer-events: none;
+  mask-image: linear-gradient(to right, #000 90%, transparent), linear-gradient(to bottom, transparent, #000 6%, #000 94%, transparent);
+  mask-composite: intersect;
+}
+.rw-explosion-visual img, .rw-explosion-visual canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.rw-explosion-copy {
+  position: absolute;
+  top: 35%;
+  right: 3%;
+  width: 54%;
+  text-align: right;
+  color: #ddcfaa;
+}
+.rw-explosion-copy h1 {
+  font-family: 'Pinyon Script', 'Cormorant Garamond', cursive;
+  font-weight: 400;
+  font-size: clamp(100px, 14.5vw, 285px);
+  line-height: 1.2;
+  margin: 0 0 48px;
+}
+.rw-explosion-copy p {
+  font-size: clamp(12px, 1.65vw, 30px);
+  font-weight: 400;
+  line-height: 1.6;
+  text-transform: uppercase;
+  margin: 0;
+}
+.rw-explosion-copy span { white-space: nowrap; }
+@media (max-width: 767px) {
+  .rw-explosion-hero { height: 90svh; min-height: 620px; max-height: 900px; }
+  .rw-explosion-visual { width: 125%; height: 68%; left: -22%; top: 0; }
+  .rw-explosion-copy { top: auto; bottom: 9%; right: 6%; width: 88%; }
+  .rw-explosion-copy h1 { font-size: clamp(86px, 23vw, 170px); margin-bottom: 20px; }
+  .rw-explosion-copy p { font-size: 13px; }
+  .rw-explosion-copy span { display: block; }
+}
