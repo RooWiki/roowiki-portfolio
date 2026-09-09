@@ -32,7 +32,7 @@ export default function Tools() {
         <p>Built for artists. Ready to explore.</p>
       </div>
       <div className="rw-square-gallery">
-        {TOOLS.map((project, index) => <GalleryCard key={project.id} {...project} index={index} category="Open project" />)}
+        {TOOLS.map(project => <GalleryCard key={project.id} {...project} />)}
       </div>
     </section>
   )

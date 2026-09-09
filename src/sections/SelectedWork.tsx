@@ -39,7 +39,7 @@ export default function Projects() {
         <p>Real-time effects, shaders & materials.</p>
       </div>
       <div className="rw-square-gallery">
-        {PROJECTS.map((project, index) => <GalleryCard key={project.id} {...project} index={index} category="View on ArtStation" />)}
+        {PROJECTS.map(project => <GalleryCard key={project.id} {...project} />)}
       </div>
       <a className="rw-gallery-more rw-text-link" href="https://www.artstation.com/roowiki" target="_blank" rel="noopener noreferrer" aria-label="All work on ArtStation (opens in new tab)">All work on ArtStation ↗</a>
     </section>

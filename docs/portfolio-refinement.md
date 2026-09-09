@@ -4,8 +4,9 @@ Preserve the existing dark palette, system sans-serif typography and square Tool
 
 - Add fixed section navigation with a current-section indicator, keyboard skip link and anchor offsets below the header. Software and Skills remain under About in the compact navigation.
 - Add portfolio/contact actions to the introduction, location context and a discover-more link.
-- Replace duplicated thumbnail implementations with GalleryCard: strict 1:1 aspect ratio, persistent project names, keyboard-visible focus, CSS hover animation and lazy image loading. All seven original project destinations remain unchanged.
+- Replace duplicated thumbnail implementations with GalleryCard: strict 1:1 aspect ratio, image-only cards with accessible names, keyboard-visible focus, the original 1.05× zoom and brightness hover animation and lazy image loading. All seven original project destinations remain unchanged.
 - Use responsive galleries: four columns on large screens, two on tablets/phones and one below 381px. Cards retain square corners.
+- Use a shared responsive page gutter (32–112px) for navigation, hero text, sections, galleries and footer.
 - Simplify Contact into a clear email action, phone and social links. Add back-to-top navigation in the footer.
 - Remove the unused external font request; use the existing system font everywhere in the active page.
 

@@ -30,8 +30,8 @@
 .rw-explosion-copy {
   position: absolute;
   top: 35%;
-  right: 3%;
-  width: 54%;
+  right: var(--rw-page-gutter);
+  width: calc(50% - var(--rw-page-gutter));
   text-align: right;
   color: var(--rw-text-primary);
 }
@@ -57,7 +57,7 @@
   .rw-explosion-hero { height: 90svh; min-height: 620px; max-height: 900px; }
   .rw-explosion-visual { width: 100%; height: 61.2svh; min-height: 421px; max-height: 612px; left: 0; top: 52px; transition: opacity .3s ease; }
   .rw-explosion-visual[data-scrolled="true"] { opacity: .16; }
-  .rw-explosion-copy { top: auto; bottom: 9%; right: 6%; width: 88%; }
+  .rw-explosion-copy { top: auto; bottom: 9%; right: var(--rw-page-gutter); width: calc(100% - 2 * var(--rw-page-gutter)); }
   .rw-explosion-copy h1 { font-size: clamp(48px, 14vw, 88px); margin-bottom: 20px; }
   .rw-explosion-copy p { font-size: 13px; }
   .rw-explosion-copy span { display: block; }
@@ -65,12 +65,12 @@
 
 .rw-explosion-copy .rw-hero-eyebrow { font-size: 10px; letter-spacing: .16em; margin-bottom: 24px; }
 .rw-hero-actions { display: flex; align-items: center; justify-content: flex-end; gap: 24px; margin-top: 36px; }
-.rw-scroll-link { position: absolute; right: 3%; bottom: 32px; display: flex; align-items: center; gap: 28px; min-height: 44px; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--rw-text-secondary); }
+.rw-scroll-link { position: absolute; right: var(--rw-page-gutter); bottom: 32px; display: flex; align-items: center; gap: 28px; min-height: 44px; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--rw-text-secondary); }
 .rw-scroll-link:hover { color: var(--rw-text-primary); }
 @media (max-width: 767px) {
   .rw-explosion-copy { bottom: 12%; }
   .rw-explosion-copy .rw-hero-eyebrow { margin-bottom: 16px; }
   .rw-hero-actions { margin-top: 24px; gap: 16px; flex-wrap: wrap; }
   .rw-hero-actions .rw-button span { display: inline; }
-  .rw-scroll-link { right: 6%; bottom: 12px; }
+  .rw-scroll-link { right: var(--rw-page-gutter); bottom: 12px; }
 }
