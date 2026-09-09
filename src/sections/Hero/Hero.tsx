@@ -21,7 +21,7 @@ export default function Hero() {
           inset: 0,
           zIndex: 0,
           pointerEvents: 'none',
-          background: '#08080a',
+          background: '#181a1e',
         }}
       >
         <Suspense fallback={null}>

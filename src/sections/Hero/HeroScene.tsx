@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { FogExp2 } from 'three'
+import { ENV_BG_HEX, ENV_FOG_DENSITY } from '../../vfx/environment/environmentConfig'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { usePerformanceTier } from '../../hooks/usePerformanceTier'
 import { QUALITY_CONFIGS } from '../../lib/three/performanceConfig'
@@ -60,8 +61,8 @@ export default function HeroScene() {
         gl={{ antialias: true, powerPreference: 'high-performance' }}
         frameloop={frameloop}
         onCreated={({ gl, scene }) => {
-          gl.setClearColor(0x08080a, 1)
-          scene.fog = new FogExp2(0x08080a, 0.038)
+          gl.setClearColor(ENV_BG_HEX, 1)
+          scene.fog = new FogExp2(ENV_BG_HEX, ENV_FOG_DENSITY)
         }}
         style={{ width: '100%', height: '100%', display: 'block' }}
       >
