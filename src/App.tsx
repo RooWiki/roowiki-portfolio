@@ -17,7 +17,7 @@ export default function App() {
       <HeroScene />
       <Header />
 
-      <main style={{ flex: 1, paddingTop: 52 /* fixed header height */ }}>
+      <main id="main-content" tabIndex={-1} style={{ flex: 1, paddingTop: 52 /* fixed header height */ }}>
         <Hero />
         <About />
         <Software />

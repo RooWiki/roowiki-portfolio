@@ -1,4 +1,5 @@
-// Social icons only — brand name lives in the hero Presentation section
+import { useEffect, useState } from 'react'
+
 const SOCIAL_LINKS = [
   {
     id: 'linkedin',
@@ -20,76 +21,47 @@ const SOCIAL_LINKS = [
   },
 ]
 
-export default function Header() {
-  return (
-    <header
-      aria-label="Site header"
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 48px',
-        height: 52,
-        background: 'rgba(20,20,22,0.60)',
-        backdropFilter: 'blur(12px)',
-        WebkitBackdropFilter: 'blur(12px)',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
-      }}
-    >
-      {/* Brand — small, links to top */}
-      <a
-        href="#top"
-        style={{
-          fontSize: 13,
-          fontWeight: 500,
-          letterSpacing: '0.04em',
-          color: 'rgba(242,242,247,0.5)',
-          transition: 'color 0.15s ease',
-        }}
-        onMouseEnter={(e) => { e.currentTarget.style.color = '#f2f2f7' }}
-        onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(242,242,247,0.5)' }}
-      >
-        RooWiki
-      </a>
+const SECTIONS = [
+  { id: 'about', label: 'About' },
+  { id: 'work', label: 'Tools' },
+  { id: 'projects', label: 'VFX' },
+  { id: 'contact', label: 'Contact' },
+]
 
-      {/* Social icon links */}
-      <nav aria-label="Social links" style={{ display: 'flex', gap: 4 }}>
-        {SOCIAL_LINKS.map(link => (
-          <a
-            key={link.id}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`${link.label} (opens in new tab)`}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 36,
-              height: 36,
-              borderRadius: 6,
-              color: 'rgba(242,242,247,0.45)',
-              transition: 'color 0.15s ease, background-color 0.15s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#f2f2f7'
-              e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.06)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'rgba(242,242,247,0.45)'
-              e.currentTarget.style.backgroundColor = 'transparent'
-            }}
-          >
-            {link.icon}
-          </a>
-        ))}
-      </nav>
-    </header>
+export default function Header() {
+  const [active, setActive] = useState('top')
+  useEffect(() => {
+    const sections = [...document.querySelectorAll<HTMLElement>('main > section')]
+    let frame = 0
+    const update = () => {
+      frame = 0
+      const current = sections.filter(section => section.getBoundingClientRect().top <= 120).at(-1)
+      const id = current?.id ?? 'top'
+      setActive(id === 'skills' || id === 'software' ? 'about' : id)
+    }
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update) }
+    update()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+    }
+  }, [])
+  return (
+    <>
+      <a className="rw-skip" href="#main-content">Skip to content</a>
+      <header className="rw-header" aria-label="Site header">
+        <a href="#top" className="rw-wordmark">RooWiki<span aria-hidden="true"> / </span></a>
+        <nav aria-label="Main navigation" className="rw-primary-nav">
+          {SECTIONS.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined}>{link.label}</a>)}
+        </nav>
+        <nav aria-label="Social links" className="rw-header-social">
+          {SOCIAL_LINKS.map(link => <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer" aria-label={`${link.label} (opens in new tab)`}>{link.icon}</a>)}
+        </nav>
+      </header>
+    </>
   )
 }
 

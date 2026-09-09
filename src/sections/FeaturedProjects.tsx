@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import GalleryCard from '../components/GalleryCard'
 
 const TOOLS = [
   {
@@ -26,62 +26,14 @@ const TOOLS = [
 
 export default function Tools() {
   return (
-    <section id="work" aria-labelledby="tools-heading">
-      <p className="rw-gallery-label" id="tools-heading" role="heading" aria-level={2}>
-        Tools
-      </p>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, padding: '0 40px 40px' }}>
-        {TOOLS.map(tool => <ThumbCard key={tool.id} {...tool} />)}
+    <section id="work" aria-labelledby="work-heading" className="rw-project-section">
+      <div className="rw-gallery-heading">
+        <div><p className="rw-eyebrow">Artist tools</p><h2 id="work-heading">Tools</h2></div>
+        <p>Built for artists. Ready to explore.</p>
+      </div>
+      <div className="rw-square-gallery">
+        {TOOLS.map((project, index) => <GalleryCard key={project.id} {...project} index={index} category="Open project" />)}
       </div>
     </section>
-  )
-}
-
-interface ThumbCardProps {
-  name: string
-  url: string
-  image: string
-  imageAlt: string
-}
-
-function ThumbCard({ name, url, image, imageAlt }: ThumbCardProps) {
-  const [hovered, setHovered] = useState(false)
-  return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`${name} (opens in new tab)`}
-      title={name}
-      style={{
-        display: 'block',
-        width: 200,
-        height: 200,
-        flexShrink: 0,
-        position: 'relative',
-        overflow: 'hidden',
-        background: '#0e0e10',
-        borderRadius: 6,
-        outline: hovered ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
-        transition: 'outline-color 0.2s ease',
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <img
-        src={image}
-        alt={imageAlt}
-        style={{
-          display: 'block',
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'center',
-          transform: hovered ? 'scale(1.05)' : 'scale(1)',
-          filter: hovered ? 'brightness(1.0)' : 'brightness(0.78)',
-          transition: 'transform 0.35s ease, filter 0.35s ease',
-        }}
-      />
-    </a>
   )
 }

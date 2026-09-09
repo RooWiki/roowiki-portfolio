@@ -62,3 +62,15 @@
   .rw-explosion-copy p { font-size: 13px; }
   .rw-explosion-copy span { display: block; }
 }
+
+.rw-explosion-copy .rw-hero-eyebrow { font-size: 10px; letter-spacing: .16em; margin-bottom: 24px; }
+.rw-hero-actions { display: flex; align-items: center; justify-content: flex-end; gap: 24px; margin-top: 36px; }
+.rw-scroll-link { position: absolute; right: 3%; bottom: 32px; display: flex; align-items: center; gap: 28px; min-height: 44px; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--rw-text-secondary); }
+.rw-scroll-link:hover { color: var(--rw-text-primary); }
+@media (max-width: 767px) {
+  .rw-explosion-copy { bottom: 12%; }
+  .rw-explosion-copy .rw-hero-eyebrow { margin-bottom: 16px; }
+  .rw-hero-actions { margin-top: 24px; gap: 16px; flex-wrap: wrap; }
+  .rw-hero-actions .rw-button span { display: inline; }
+  .rw-scroll-link { right: 6%; bottom: 12px; }
+}
