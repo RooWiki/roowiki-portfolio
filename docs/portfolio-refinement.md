@@ -13,3 +13,5 @@ Preserve the existing dark palette, system sans-serif typography and square Tool
 Shared App.tsx change: add a main-content anchor and programmatic focus target for the skip link. This is within the user's explicit authorization to refine the complete page.
 
 Validation: production build and lint; Chromium checks at 320, 390, 768, 873 and 1440px for no horizontal overflow and seven 1:1 cards; section-link scrolling and active navigation, contact destination, mobile background dimming, pointer passthrough, keyboard skip link and page errors. External destinations are preserved, not newly audited.
+
+The desktop explosion now occupies 86% of the viewport width (previously 53%), with a viewport-height contain fit. Soft, opaque dark backings around the introduction, reading columns and gallery headings keep the enlarged effect away from the text. Backings ignore pointer events. Mobile retains its full-width contained artwork and reduced opacity while reading.

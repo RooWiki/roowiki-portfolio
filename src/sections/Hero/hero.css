@@ -12,8 +12,8 @@
 .rw-explosion-visual {
   position: fixed;
   z-index: 0;
-  width: 53%;
-  height: min(850px, 100svh);
+  width: 86%;
+  height: calc(100svh - 52px);
   min-height: 540px;
   left: 0;
   top: 52px;
@@ -74,3 +74,29 @@
   .rw-hero-actions .rw-button span { display: inline; }
   .rw-scroll-link { right: var(--rw-page-gutter); bottom: 12px; }
 }
+
+/* Opaque text backing with soft edges keeps the plume clear of the letters. */
+.rw-explosion-copy { isolation: isolate; }
+.rw-explosion-copy::before {
+  content: '';
+  position: absolute;
+  inset: -24px;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--rw-bg);
+  box-shadow: 0 0 56px 32px var(--rw-bg);
+}
+.rw-scroll-link { isolation: isolate; }
+.rw-scroll-link::before {
+  content: '';
+  position: absolute;
+  inset: -8px -16px;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--rw-bg);
+  box-shadow: 0 0 24px 12px var(--rw-bg);
+}
+@media (max-width: 767px) {
+  .rw-explosion-copy::before { inset: -16px; box-shadow: 0 0 32px 16px var(--rw-bg); }
+}
+.rw-explosion-copy::before { border-radius: 32px; filter: blur(28px); }
