@@ -38,6 +38,17 @@ export default function HeroScene() {
   const reducedMotion = useReducedMotion()
 
   useEffect(() => {
+    const intro = document.getElementById('top')
+    if (!intro) return
+    // On narrow screens dim the fixed artwork once text sections reach it.
+    const observer = new IntersectionObserver(([entry]) => {
+      if (host.current) host.current.dataset.scrolled = String(!entry.isIntersecting)
+    }, { rootMargin: '-52px 0px 0px 0px' })
+    observer.observe(intro)
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
     const node = canvas.current
     const container = host.current
     if (!node || !container || reducedMotion) return

@@ -2,6 +2,7 @@
 // Theme management kept in useTheme but toggle hidden; design is always dark.
 import Header from './components/Header'
 import Hero from './sections/Hero/Hero'
+import HeroScene from './sections/Hero/HeroScene'
 import About from './sections/About'
 import Software from './sections/Software'
 import Skills from './sections/Skills'
@@ -12,7 +13,8 @@ import Footer from './sections/Footer'
 
 export default function App() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="rw-page" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <HeroScene />
       <Header />
 
       <main style={{ flex: 1, paddingTop: 52 /* fixed header height */ }}>
