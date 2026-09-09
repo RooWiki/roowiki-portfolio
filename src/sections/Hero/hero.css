@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap');
-
 .rw-page { isolation: isolate; }
 .rw-page > main, .rw-page > footer { position: relative; z-index: 1; }
 
@@ -35,17 +33,20 @@
   right: 3%;
   width: 54%;
   text-align: right;
-  color: #ddcfaa;
+  color: var(--rw-text-primary);
 }
 .rw-explosion-copy h1 {
-  font-family: 'Pinyon Script', 'Cormorant Garamond', cursive;
-  font-weight: 400;
-  font-size: clamp(100px, 14.5vw, 285px);
-  line-height: 1.2;
-  margin: 0 0 48px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: clamp(56px, 7.5vw, 144px);
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin: 0 0 24px;
 }
 .rw-explosion-copy p {
-  font-size: clamp(12px, 1.65vw, 30px);
+  color: var(--rw-text-secondary);
+  font-size: clamp(11px, 1vw, 16px);
+  letter-spacing: 0.08em;
   font-weight: 400;
   line-height: 1.6;
   text-transform: uppercase;
@@ -57,7 +58,7 @@
   .rw-explosion-visual { width: 100%; height: 61.2svh; min-height: 421px; max-height: 612px; left: 0; top: 52px; transition: opacity .3s ease; }
   .rw-explosion-visual[data-scrolled="true"] { opacity: .16; }
   .rw-explosion-copy { top: auto; bottom: 9%; right: 6%; width: 88%; }
-  .rw-explosion-copy h1 { font-size: clamp(86px, 23vw, 170px); margin-bottom: 20px; }
+  .rw-explosion-copy h1 { font-size: clamp(48px, 14vw, 88px); margin-bottom: 20px; }
   .rw-explosion-copy p { font-size: 13px; }
   .rw-explosion-copy span { display: block; }
 }
