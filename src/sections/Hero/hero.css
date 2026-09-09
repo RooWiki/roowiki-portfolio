@@ -6,17 +6,16 @@
   min-height: 540px;
   overflow: hidden;
   isolation: isolate;
-  background: #1d1d1d;
+  background: var(--rw-bg);
 }
 .rw-explosion-visual {
   position: absolute;
-  width: 66%;
+  width: 53%;
   height: 100%;
-  left: -7%;
+  left: 0;
   top: 0;
   pointer-events: none;
-  mask-image: linear-gradient(to right, #000 90%, transparent), linear-gradient(to bottom, transparent, #000 6%, #000 94%, transparent);
-  mask-composite: intersect;
+  mix-blend-mode: lighten;
 }
 .rw-explosion-visual img, .rw-explosion-visual canvas {
   position: absolute;
@@ -24,6 +23,7 @@
   height: 100%;
   object-fit: contain;
 }
+.rw-explosion-visual img { filter: url(#rw-explosion-background); }
 .rw-explosion-copy {
   position: absolute;
   top: 35%;
@@ -49,7 +49,7 @@
 .rw-explosion-copy span { white-space: nowrap; }
 @media (max-width: 767px) {
   .rw-explosion-hero { height: 90svh; min-height: 620px; max-height: 900px; }
-  .rw-explosion-visual { width: 125%; height: 68%; left: -22%; top: 0; }
+  .rw-explosion-visual { width: 100%; height: 68%; left: 0; top: 0; }
   .rw-explosion-copy { top: auto; bottom: 9%; right: 6%; width: 88%; }
   .rw-explosion-copy h1 { font-size: clamp(86px, 23vw, 170px); margin-bottom: 20px; }
   .rw-explosion-copy p { font-size: 13px; }

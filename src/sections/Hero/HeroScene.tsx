@@ -19,12 +19,12 @@ void main() {
   float imageAspect = 1.5;
   if (aspect > imageAspect) p.x = (p.x-.5)*aspect/imageAspect+.5;
   else p.y = (p.y-.5)*imageAspect/aspect+.5;
-  vec3 bg = vec3(29./255.);
+  vec3 bg = vec3(20.,20.,22.)/255.;
   if (p.x < 0. || p.x > 1. || p.y < 0. || p.y > 1.) { gl_FragColor=vec4(bg,1.); return; }
   float envelope = sin(p.x*3.14159)*sin(p.y*3.14159);
   p.x += sin(p.y*25.-time*1.7+sin(p.x*15.+time))*.007*envelope;
   p.y += sin(p.x*32.-time*2.1+sin(p.y*19.-time))*.009*envelope;
-  vec3 color = texture2D(fire, p).rgb;
+  vec3 color = max(vec3(0.), texture2D(fire, p).rgb - vec3(9.,9.,7.)/255.);
   float heat = smoothstep(.12,.65,color.r-color.b);
   color *= 1.+heat*.055*sin(time*3.2+p.x*18.+p.y*11.);
   float edge = smoothstep(0.,.07,min(min(p.x,1.-p.x),min(p.y,1.-p.y)));
@@ -154,6 +154,16 @@ export default function HeroScene() {
 
   return (
     <div ref={host} className="rw-explosion-visual" aria-hidden="true">
+      {/* Match the texture's charcoal backdrop to --rw-bg in the static fallback too. */}
+      <svg width="0" height="0" style={{ position: 'absolute' }}>
+        <filter id="rw-explosion-background" colorInterpolationFilters="sRGB">
+          <feComponentTransfer>
+            <feFuncR type="linear" slope="1" intercept={-9 / 255} />
+            <feFuncG type="linear" slope="1" intercept={-9 / 255} />
+            <feFuncB type="linear" slope="1" intercept={-7 / 255} />
+          </feComponentTransfer>
+        </filter>
+      </svg>
       <img src={textureUrl} alt="" width="1536" height="1024" fetchPriority="high" />
       <canvas ref={canvas} style={{ opacity: 0 }} />
     </div>
