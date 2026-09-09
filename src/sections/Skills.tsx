@@ -1,50 +1,56 @@
-import { SKILL_GROUPS } from '../data/skills'
+const SKILL_GROUPS = [
+  {
+    label: 'Real-Time VFX',
+    lines: [
+      'GPU Particle Systems · Shader-Driven Particles',
+      'Explosion / Destruction FX',
+      'Environmental FX · Screen-Space Effects',
+    ],
+    tools: 'Niagara (UE5) · VFX Graph (Unity) · Three.js',
+  },
+  {
+    label: 'Shaders & Materials',
+    lines: [
+      'HLSL · GLSL',
+      'Procedural Noise · Domain Warping',
+      'Vertex Displacement · Post-Processing',
+    ],
+    tools: 'UE5 Material Editor · Unity Shader Graph · Three.js ShaderMaterial',
+  },
+  {
+    label: 'Tools & Technical Art',
+    lines: [
+      'UV Workflows · Vertex Colors',
+      'Mesh Optimization · Geometry Processing',
+      'Browser-Based Editors · Artist Pipelines',
+    ],
+    tools: 'Three.js · TypeScript / React · Maya · Blender',
+  },
+]
 
 export default function Skills() {
   return (
-    <section
-      id="skills"
-      aria-labelledby="skills-heading"
-      style={{
-        borderTop: '1px solid var(--rw-border)',
-        padding: '96px 0',
-      }}
-    >
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px' }}>
-        <p style={labelStyle}>Skills</p>
-        <h2 id="skills-heading" style={headingStyle}>
-          Capabilities
-        </h2>
+    <section id="skills" aria-labelledby="skills-heading" className="rw-section">
+      <div className="rw-split">
+        {/* Left: visual zone */}
+        <div className="rw-split-left" />
 
-        <div
-          style={{
-            marginTop: 48,
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
-            gap: 32,
-          }}
-        >
-          {SKILL_GROUPS.map(group => (
-            <div key={group.category}>
-              <h3 style={groupHeadingStyle}>{group.category}</h3>
-              <ul
-                style={{
-                  listStyle: 'none',
-                  margin: 0,
-                  padding: 0,
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: 8,
-                }}
-              >
-                {group.skills.map(skill => (
-                  <li key={skill}>
-                    <span style={tagStyle}>{skill}</span>
-                  </li>
+        {/* Right: skills text */}
+        <div className="rw-split-right">
+          <p style={labelStyle}>Skills</p>
+          <h2 id="skills-heading" style={headingStyle}>Capabilities</h2>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 36 }}>
+            {SKILL_GROUPS.map(group => (
+              <div key={group.label}>
+                <p style={groupLabelStyle}>{group.label}</p>
+                {group.lines.map(line => (
+                  <p key={line} style={lineStyle}>{line}</p>
                 ))}
-              </ul>
-            </div>
-          ))}
+                <p style={toolsStyle}>{group.tools}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -52,36 +58,43 @@ export default function Skills() {
 }
 
 const labelStyle: React.CSSProperties = {
-  fontSize: 12,
-  letterSpacing: '0.10em',
+  fontSize: 10,
+  letterSpacing: '0.16em',
   textTransform: 'uppercase',
-  color: 'var(--rw-text-tertiary)',
-  margin: '0 0 12px',
+  color: 'var(--rw-text-secondary)',
+  margin: '0 0 20px',
 }
 
 const headingStyle: React.CSSProperties = {
-  fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+  fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
   fontWeight: 600,
   letterSpacing: '-0.02em',
   color: 'var(--rw-text-primary)',
-  margin: 0,
+  margin: '0 0 36px',
+  lineHeight: 1.1,
 }
 
-const groupHeadingStyle: React.CSSProperties = {
-  fontSize: 14,
-  fontWeight: 600,
-  letterSpacing: '-0.01em',
-  color: 'var(--rw-text-primary)',
-  margin: '0 0 14px',
-}
-
-const tagStyle: React.CSSProperties = {
-  display: 'inline-block',
-  fontSize: 12,
+const groupLabelStyle: React.CSSProperties = {
+  fontSize: 10,
+  letterSpacing: '0.14em',
+  textTransform: 'uppercase',
   color: 'var(--rw-text-secondary)',
-  padding: '3px 9px',
-  background: 'var(--rw-surface)',
-  border: '1px solid var(--rw-border)',
-  borderRadius: 5,
-  lineHeight: 1.5,
+  margin: '0 0 10px',
+  fontWeight: 600,
+}
+
+const lineStyle: React.CSSProperties = {
+  fontSize: 13,
+  letterSpacing: '0.04em',
+  color: 'var(--rw-text-primary)',
+  margin: '0 0 4px',
+  lineHeight: 1.7,
+}
+
+const toolsStyle: React.CSSProperties = {
+  fontSize: 11,
+  color: 'var(--rw-text-secondary)',
+  margin: '10px 0 0',
+  letterSpacing: '0.02em',
+  lineHeight: 1.8,
 }

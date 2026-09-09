@@ -3,6 +3,8 @@ export interface Project {
   title: string
   subtitle: string
   description: string
+  capabilities: string[]
+  tech: string[]
   liveUrl: string
   repoUrl: string
   primaryCta: string
@@ -17,7 +19,13 @@ export const PROJECTS: Project[] = [
     title: 'Circle Editor',
     subtitle: 'Browser Tool · VFX',
     description:
-      'A browser-based procedural editor for designing magic-circle VFX and exporting transparent textures for game-engine workflows.',
+      'A procedural editor for designing layered magic-circle VFX in the browser. Each circle is built from configurable layers — rotating rings, radial patterns, glow — and exported as a transparent PNG texture ready to use in Unreal, Unity, or any particle system.',
+    capabilities: [
+      'Procedural layer system',
+      'Transparent PNG export',
+      'Real-time preview',
+    ],
+    tech: ['Three.js', 'TypeScript', 'WebGL'],
     liveUrl: 'https://roowiki.com/circleeditor/',
     repoUrl: 'https://github.com/RooWiki/VFXMagicCircleEditor',
     primaryCta: 'Open Tool',
@@ -29,7 +37,13 @@ export const PROJECTS: Project[] = [
     title: 'Mesh Editor',
     subtitle: 'Browser Tool · Technical Art',
     description:
-      'A browser-based mesh utility focused on preparing geometry data for shader and technical-art workflows.',
+      'A browser-based mesh utility for preparing geometry for shader workflows. Supports UV mapping with six projection modes, vertex color painting, face and vertex editing with weld support, multi-viewport layout, and OBJ / JSON export — no DCC software required.',
+    capabilities: [
+      'UV projections (planar, cylindrical, spherical, box)',
+      'Vertex + face editing with weld',
+      'OBJ / JSON export',
+    ],
+    tech: ['Three.js', 'TypeScript', 'React', 'Zustand'],
     liveUrl: 'https://roowiki.com/mesheditor/',
     repoUrl: 'https://github.com/RooWiki/shadermesh',
     primaryCta: 'Open Tool',

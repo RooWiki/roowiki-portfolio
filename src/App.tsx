@@ -1,4 +1,5 @@
-import { useTheme } from './hooks/useTheme'
+// Shared file — section order updated for CV redesign (2026-09-09).
+// Theme management kept in useTheme but toggle hidden; design is always dark.
 import Header from './components/Header'
 import Hero from './sections/Hero/Hero'
 import About from './sections/About'
@@ -10,13 +11,11 @@ import Contact from './sections/Contact'
 import Footer from './sections/Footer'
 
 export default function App() {
-  const { theme, toggleTheme } = useTheme()
-
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      <Header theme={theme} onToggleTheme={toggleTheme} />
+      <Header />
 
-      <main style={{ flex: 1 }}>
+      <main style={{ flex: 1, paddingTop: 52 /* fixed header height */ }}>
         <Hero />
         <About />
         <Software />

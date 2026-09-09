@@ -1,72 +1,87 @@
-import ProjectCard from '../components/ProjectCard'
-import { PROJECTS } from '../data/projects'
+import { useState } from 'react'
+
+const TOOLS = [
+  {
+    id: 'circle-editor',
+    name: 'Circle Editor',
+    url: 'https://roowiki.com/circleeditor/',
+    image: '/projects/circle-editor-cover.jpg',
+    imageAlt: 'WEB Circle Editor',
+  },
+  {
+    id: 'mesh-editor',
+    name: 'Mesh Editor',
+    url: 'https://roowiki.com/mesheditor/',
+    image: '/projects/mesh-editor-cover.png',
+    imageAlt: 'WEB Mesh Editor',
+  },
+  {
+    id: 'auto-rig-tool',
+    name: 'Auto Rig Tool',
+    url: 'https://www.artstation.com/artwork/Dvkq10',
+    image: '/projects/auto-rig-tool.png',
+    imageAlt: 'Auto Rig Tool',
+  },
+]
 
 export default function Tools() {
   return (
-    <section
-      id="tools"
-      aria-labelledby="tools-heading"
-      style={{
-        borderTop: '1px solid var(--rw-border)',
-        padding: '96px 0',
-      }}
-    >
-      <div
-        style={{
-          maxWidth: 1100,
-          margin: '0 auto',
-          padding: '0 24px',
-        }}
-      >
-        <p style={labelStyle}>Tools</p>
-        <h2
-          id="tools-heading"
-          style={headingStyle}
-        >
-          Browser tools I've built
-        </h2>
-
-        <p
-          style={{
-            fontSize: 15,
-            color: 'var(--rw-text-secondary)',
-            margin: '16px 0 48px',
-            maxWidth: 560,
-            lineHeight: 1.70,
-          }}
-        >
-          Standalone web applications for VFX and technical-art workflows, built with
-          Three.js and TypeScript.
-        </p>
-
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 480px), 1fr))',
-            gap: 24,
-          }}
-        >
-          {PROJECTS.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
-        </div>
+    <section id="work" aria-labelledby="tools-heading">
+      <p className="rw-gallery-label" id="tools-heading" role="heading" aria-level={2}>
+        Tools
+      </p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3, padding: '0 40px 40px' }}>
+        {TOOLS.map(tool => <ThumbCard key={tool.id} {...tool} />)}
       </div>
     </section>
   )
 }
 
-const labelStyle: React.CSSProperties = {
-  fontSize: 12,
-  letterSpacing: '0.10em',
-  textTransform: 'uppercase',
-  color: 'var(--rw-text-tertiary)',
-  margin: '0 0 12px',
+interface ThumbCardProps {
+  name: string
+  url: string
+  image: string
+  imageAlt: string
 }
 
-const headingStyle: React.CSSProperties = {
-  fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-  fontWeight: 600,
-  letterSpacing: '-0.02em',
-  color: 'var(--rw-text-primary)',
-  margin: 0,
+function ThumbCard({ name, url, image, imageAlt }: ThumbCardProps) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${name} (opens in new tab)`}
+      title={name}
+      style={{
+        display: 'block',
+        width: 200,
+        height: 200,
+        flexShrink: 0,
+        position: 'relative',
+        overflow: 'hidden',
+        background: '#0e0e10',
+        borderRadius: 6,
+        outline: hovered ? '1px solid rgba(255,255,255,0.18)' : '1px solid transparent',
+        transition: 'outline-color 0.2s ease',
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <img
+        src={image}
+        alt={imageAlt}
+        style={{
+          display: 'block',
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'center',
+          transform: hovered ? 'scale(1.05)' : 'scale(1)',
+          filter: hovered ? 'brightness(1.0)' : 'brightness(0.78)',
+          transition: 'transform 0.35s ease, filter 0.35s ease',
+        }}
+      />
+    </a>
+  )
 }

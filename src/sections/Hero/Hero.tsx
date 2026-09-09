@@ -42,44 +42,18 @@ export default function Hero() {
         }}
       />
 
-      {/* HTML content — sits above the canvas */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 1,
-          minHeight: '100svh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'flex-end',
-          pointerEvents: 'none',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 1100,
-            margin: '0 auto',
-            width: '100%',
-            padding: '0 24px 80px',
-          }}
-        >
-          <p
-            style={{
-              fontSize: 12,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: '#8e8e93',
-              margin: '0 0 16px',
-            }}
-          >
-            Technical Artist
-          </p>
+      {/* HTML content — two-column: left=visual zone, right=presentation text */}
+      <div className="rw-hero-grid" style={{ position: 'relative', zIndex: 1 }}>
+        {/* Left: visual zone — VFX shows through, no content */}
+        <div className="rw-hero-left" />
 
+        {/* Right: presentation content, right-aligned, pinned to bottom */}
+        <div className="rw-hero-right" style={{ pointerEvents: 'none' }}>
+          {/* Brand name */}
           <h1
+            className="rw-brand"
             style={{
-              fontSize: 'clamp(3rem, 8vw, 5.5rem)',
-              fontWeight: 700,
-              letterSpacing: '-0.04em',
-              lineHeight: 1.0,
+              fontSize: 'clamp(3.5rem, 6vw, 6rem)',
               color: '#f2f2f7',
               margin: '0 0 20px',
             }}
@@ -87,56 +61,55 @@ export default function Hero() {
             RooWiki
           </h1>
 
+          {/* Identity line */}
           <p
             style={{
-              fontSize: 'clamp(0.75rem, 1.5vw, 0.875rem)',
+              fontSize: 11,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
               color: '#8e8e93',
-              margin: '0 0 20px',
+              margin: '0 0 28px',
+              lineHeight: 1.9,
+            }}
+          >
+            Andrés Piñeros · Technical Artist
+            <br />
+            Shaders · VFX · Tools
+          </p>
+
+          {/* Contact info — links need pointerEvents */}
+          <div
+            style={{
+              fontSize: 11,
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
-            }}
-          >
-            VFX · Shaders · Tools · Real-Time
-          </p>
-
-          <p
-            style={{
-              fontSize: 16,
-              color: '#8e8e93',
-              maxWidth: 460,
-              lineHeight: 1.75,
-              margin: '0 0 48px',
-            }}
-          >
-            I create real-time visual effects, shaders, and artist-friendly tools at the
-            intersection of art and engineering.
-          </p>
-
-          <a
-            href="#about"
-            style={{
-              display: 'inline-block',
-              padding: '12px 28px',
-              fontSize: 14,
-              fontWeight: 500,
-              letterSpacing: '0.01em',
-              color: '#f2f2f7',
-              border: '1px solid rgba(242, 242, 247, 0.25)',
-              borderRadius: 8,
+              lineHeight: 2.4,
               pointerEvents: 'auto',
-              transition: 'background-color 0.2s ease, border-color 0.2s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(242, 242, 247, 0.08)'
-              e.currentTarget.style.borderColor = 'rgba(242, 242, 247, 0.45)'
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent'
-              e.currentTarget.style.borderColor = 'rgba(242, 242, 247, 0.25)'
+              color: 'rgba(142,142,147,0.7)',
             }}
           >
-            View My Work
-          </a>
+            <div>
+              <a
+                href="mailto:roowiki@gmail.com"
+                style={{ transition: 'color 0.15s ease' }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = '#8e8e93' }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = '' }}
+              >
+                Email: roowiki@gmail.com
+              </a>
+            </div>
+            <div>
+              <a
+                href="tel:+14382236229"
+                style={{ transition: 'color 0.15s ease' }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = '#8e8e93' }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = '' }}
+              >
+                +1 (438) 223-6229
+              </a>
+            </div>
+            <div>Montréal, QC</div>
+          </div>
         </div>
       </div>
     </section>

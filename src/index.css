@@ -1,53 +1,33 @@
 @import 'tailwindcss';
 
-/* ─── iOS-derived grayscale palette ──────────────────────────────────────────
-   systemGray (#8E8E93) is identical in both modes.
-   All other grays flip between their light and dark variants.
-   ─────────────────────────────────────────────────────────────────────────── */
+/* ─── Palette (always dark) ───────────────────────────────────────────────── */
 
 :root,
+[data-theme='dark'],
 [data-theme='light'] {
-  --rw-bg: #f2f2f7; /* systemGray6 light */
-  --rw-surface: #ffffff; /* cards */
-  --rw-surface-2: #e5e5ea; /* systemGray5 light — secondary surface */
-  --rw-border: #d1d1d6; /* systemGray4 light */
-  --rw-text-primary: #1c1c1e; /* near-black */
-  --rw-text-secondary: #8e8e93; /* systemGray — same in both modes */
-  --rw-text-tertiary: #aeaeb2; /* systemGray2 light */
-}
-
-[data-theme='dark'] {
-  --rw-bg: #1c1c1e; /* systemGray6 dark */
-  --rw-surface: #2c2c2e; /* systemGray5 dark */
-  --rw-surface-2: #48484a; /* systemGray3 dark */
-  --rw-border: #3a3a3c; /* systemGray4 dark */
-  --rw-text-primary: #f2f2f7; /* near-white */
-  --rw-text-secondary: #8e8e93; /* systemGray — same in both modes */
-  --rw-text-tertiary: #636366; /* systemGray2 dark */
+  --rw-bg:            #141416;
+  --rw-surface:       #1e1e20;
+  --rw-surface-2:     #2a2a2c;
+  --rw-border:        rgba(255, 255, 255, 0.08);
+  --rw-border-mid:    rgba(255, 255, 255, 0.12);
+  --rw-text-primary:  #f2f2f7;
+  --rw-text-secondary:#8e8e93;
+  --rw-text-tertiary: #8e8e93;
 }
 
 /* ─── Base ────────────────────────────────────────────────────────────────── */
 
 *,
 *::before,
-*::after {
-  box-sizing: border-box;
-}
+*::after { box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
     transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
+    animation-duration:  0.01ms !important;
   }
 }
 
@@ -55,21 +35,13 @@ body {
   margin: 0;
   background-color: var(--rw-bg);
   color: var(--rw-text-primary);
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
 }
 
-/* ─── Focus ring ──────────────────────────────────────────────────────────── */
+a { color: inherit; text-decoration: none; }
 
 :focus-visible {
   outline: 2px solid var(--rw-text-secondary);
@@ -77,22 +49,113 @@ body {
   border-radius: 3px;
 }
 
-/* ─── Links ───────────────────────────────────────────────────────────────── */
+/* ─── Typography ──────────────────────────────────────────────────────────── */
 
-a {
-  color: inherit;
-  text-decoration: none;
+.rw-brand {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  line-height: 0.92;
 }
 
-/* ─── Responsive nav ──────────────────────────────────────────────────────── */
+/* ─── Section dividers ────────────────────────────────────────────────────── */
 
-@media (max-width: 679px) {
-  .rw-nav-desktop {
-    display: none;
+.rw-section {
+  border-top: 1px solid var(--rw-border);
+}
+
+/* ─── Two-column split layout ─────────────────────────────────────────────── */
+
+.rw-split {
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+}
+
+.rw-split-right {
+  border-left: 1px solid var(--rw-border);
+  padding: 72px 52px 72px 44px;
+  text-align: right;
+}
+
+@media (max-width: 767px) {
+  .rw-split          { display: block; }
+  .rw-split-left     { display: none; }
+  .rw-split-right    { border-left: none; padding: 52px 24px; text-align: left; }
+}
+
+/* ─── Hero presentation grid ──────────────────────────────────────────────── */
+
+.rw-hero-grid {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  min-height: 100svh;
+  pointer-events: none;
+}
+
+.rw-hero-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 52px 80px 44px;
+  text-align: right;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 767px) {
+  .rw-hero-grid  { display: flex; flex-direction: column; min-height: 100svh; }
+  .rw-hero-left  { display: none; }
+  .rw-hero-right {
+    flex: 1;
+    border-left: none;
+    padding: 80px 24px 64px;
+    text-align: left;
+    justify-content: flex-end;
   }
 }
 
-/* ─── Screen-reader only utility ──────────────────────────────────────────── */
+/* ─── Gallery ─────────────────────────────────────────────────────────────── */
+
+.rw-gallery-label {
+  padding: 36px 40px 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rw-text-secondary);
+  border-top: 1px solid var(--rw-border);
+}
+
+.rw-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--rw-border);
+}
+
+.rw-gallery-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--rw-border);
+}
+
+@media (max-width: 767px) {
+  .rw-gallery-grid,
+  .rw-gallery-grid-2 { grid-template-columns: 1fr; }
+  .rw-gallery-label  { padding: 32px 24px 16px; }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .rw-gallery-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ─── Focus / nav ─────────────────────────────────────────────────────────── */
+
+.rw-nav-desktop { display: flex; align-items: center; }
+
+@media (max-width: 679px) {
+  .rw-nav-desktop { display: none; }
+}
 
 .sr-only {
   position: absolute;

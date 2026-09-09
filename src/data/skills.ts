@@ -1,3 +1,58 @@
+// ─── Skill areas (used by the consolidated Skills & Tools section) ────────────
+
+export interface SkillArea {
+  id: string
+  title: string
+  summary: string
+  skills: string[]
+  tools: string[]
+}
+
+export const SKILL_AREAS: SkillArea[] = [
+  {
+    id: 'vfx',
+    title: 'Real-Time VFX',
+    summary:
+      'GPU particle systems, explosion and destruction effects, and environmental FX — authored in Niagara and VFX Graph, or built from scratch with custom shaders.',
+    skills: [
+      'GPU Particle Systems',
+      'Explosion / Destruction FX',
+      'Environmental Effects',
+      'Screen-Space Effects',
+      'Shader-Driven Particles',
+    ],
+    tools: ['Niagara (UE5)', 'VFX Graph (Unity)', 'Three.js / GLSL'],
+  },
+  {
+    id: 'shaders',
+    title: 'Shaders & Materials',
+    summary:
+      'Custom ShaderMaterials in HLSL and GLSL — procedural noise, domain warping, vertex displacement, and post-processing, from visual node graphs to hand-written code.',
+    skills: [
+      'HLSL / GLSL',
+      'Procedural Noise',
+      'Domain Warping',
+      'Vertex Displacement',
+      'Post-Processing',
+    ],
+    tools: ['UE5 Material Editor', 'Unity Shader Graph', 'Three.js ShaderMaterial'],
+  },
+  {
+    id: 'tools',
+    title: 'Tools & Technical Art',
+    summary:
+      'Browser-based tools for VFX and geometry workflows. UV mapping pipelines, vertex color authoring, mesh optimization, and artist-facing interfaces built with the web platform.',
+    skills: [
+      'UV Workflows',
+      'Vertex Colors',
+      'Mesh Optimization',
+      'Geometry Processing',
+      'Procedural Editors',
+    ],
+    tools: ['Three.js', 'TypeScript / React', 'Maya', 'Blender'],
+  },
+]
+
 // ─── Software proficiency entries ─────────────────────────────────────────────
 
 export interface SoftwareEntry {
