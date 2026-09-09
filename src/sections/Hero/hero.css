@@ -1,4 +1,4 @@
-.rw-page { isolation: isolate; }
+.rw-page { isolation: isolate; overflow-x: clip; }
 .rw-page > main, .rw-page > footer { position: relative; z-index: 1; }
 
 .rw-explosion-hero {
@@ -75,28 +75,15 @@
   .rw-scroll-link { right: var(--rw-page-gutter); bottom: 12px; }
 }
 
-/* Opaque text backing with soft edges keeps the plume clear of the letters. */
-.rw-explosion-copy { isolation: isolate; }
-.rw-explosion-copy::before {
+/* A single masked backing avoids contours from stacked shadows and blur. */
+.rw-explosion-copy, .rw-scroll-link { isolation: isolate; }
+.rw-explosion-copy::before, .rw-scroll-link::before {
   content: '';
   position: absolute;
-  inset: -24px;
+  inset: -88px -80px;
   z-index: -1;
   pointer-events: none;
   background: var(--rw-bg);
-  box-shadow: 0 0 56px 32px var(--rw-bg);
+  mask-image: linear-gradient(to right, transparent, #000 80px, #000 calc(100% - 80px), transparent), linear-gradient(to bottom, transparent, #000 88px, #000 calc(100% - 88px), transparent);
+  mask-composite: intersect;
 }
-.rw-scroll-link { isolation: isolate; }
-.rw-scroll-link::before {
-  content: '';
-  position: absolute;
-  inset: -8px -16px;
-  z-index: -1;
-  pointer-events: none;
-  background: var(--rw-bg);
-  box-shadow: 0 0 24px 12px var(--rw-bg);
-}
-@media (max-width: 767px) {
-  .rw-explosion-copy::before { inset: -16px; box-shadow: 0 0 32px 16px var(--rw-bg); }
-}
-.rw-explosion-copy::before { border-radius: 32px; filter: blur(28px); }
