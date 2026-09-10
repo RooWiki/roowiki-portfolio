@@ -3,6 +3,7 @@ import './hero.css'
 export default function Hero() {
   return (
     <section id="top" className="rw-explosion-hero" aria-label="Introduction">
+      <div className="rw-hero-blur" aria-hidden="true" />
       <div className="rw-explosion-copy">
         <p className="rw-hero-eyebrow">Technical art · Montréal, Canada</p>
         <h1>RooWiki</h1>

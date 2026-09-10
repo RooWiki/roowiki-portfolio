@@ -29,6 +29,7 @@
 .rw-explosion-visual img { filter: url(#rw-explosion-background); }
 .rw-explosion-copy {
   position: absolute;
+  z-index: 1;
   top: 35%;
   right: var(--rw-page-gutter);
   width: calc(50% - var(--rw-page-gutter));
@@ -75,6 +76,20 @@
   .rw-scroll-link { right: var(--rw-page-gutter); bottom: 12px; }
 }
 
+/* Blur overlay: sibling div so backdrop-filter captures the fixed explosion canvas. */
+.rw-hero-blur {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  backdrop-filter: blur(80px);
+  -webkit-backdrop-filter: blur(80px);
+  mask-image:
+    linear-gradient(to right, transparent 25%, rgba(0,0,0,.6) 50%, #000 70%),
+    linear-gradient(to bottom, transparent, rgba(0,0,0,.5) 8%, #000 18%, #000 82%, rgba(0,0,0,.5) 92%, transparent);
+  mask-composite: intersect;
+}
+
 /* A single masked backing avoids contours from stacked shadows and blur. */
 .rw-explosion-copy, .rw-scroll-link { isolation: isolate; }
 .rw-explosion-copy::before, .rw-scroll-link::before {
@@ -84,8 +99,6 @@
   z-index: -1;
   pointer-events: none;
   background: rgba(20, 20, 22, 0.72);
-  backdrop-filter: blur(80px);
-  -webkit-backdrop-filter: blur(80px);
   mask-image:
     linear-gradient(to right, transparent, rgba(0,0,0,.04) 16px, rgba(0,0,0,.16) 32px, rgba(0,0,0,.5) 64px, rgba(0,0,0,.84) 96px, rgba(0,0,0,.96) 112px, #000 128px, #000 calc(100% - 128px), rgba(0,0,0,.96) calc(100% - 112px), rgba(0,0,0,.84) calc(100% - 96px), rgba(0,0,0,.5) calc(100% - 64px), rgba(0,0,0,.16) calc(100% - 32px), rgba(0,0,0,.04) calc(100% - 16px), transparent),
     linear-gradient(to bottom, transparent, rgba(0,0,0,.04) 14px, rgba(0,0,0,.16) 28px, rgba(0,0,0,.5) 56px, rgba(0,0,0,.84) 84px, rgba(0,0,0,.96) 98px, #000 112px, #000 calc(100% - 112px), rgba(0,0,0,.96) calc(100% - 98px), rgba(0,0,0,.84) calc(100% - 84px), rgba(0,0,0,.5) calc(100% - 56px), rgba(0,0,0,.16) calc(100% - 28px), rgba(0,0,0,.04) calc(100% - 14px), transparent);
