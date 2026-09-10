@@ -84,8 +84,8 @@
   z-index: -1;
   pointer-events: none;
   background: rgba(20, 20, 22, 0.72);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
+  backdrop-filter: blur(80px);
+  -webkit-backdrop-filter: blur(80px);
   mask-image:
     linear-gradient(to right, transparent, rgba(0,0,0,.04) 16px, rgba(0,0,0,.16) 32px, rgba(0,0,0,.5) 64px, rgba(0,0,0,.84) 96px, rgba(0,0,0,.96) 112px, #000 128px, #000 calc(100% - 128px), rgba(0,0,0,.96) calc(100% - 112px), rgba(0,0,0,.84) calc(100% - 96px), rgba(0,0,0,.5) calc(100% - 64px), rgba(0,0,0,.16) calc(100% - 32px), rgba(0,0,0,.04) calc(100% - 16px), transparent),
     linear-gradient(to bottom, transparent, rgba(0,0,0,.04) 14px, rgba(0,0,0,.16) 28px, rgba(0,0,0,.5) 56px, rgba(0,0,0,.84) 84px, rgba(0,0,0,.96) 98px, #000 112px, #000 calc(100% - 112px), rgba(0,0,0,.96) calc(100% - 98px), rgba(0,0,0,.84) calc(100% - 84px), rgba(0,0,0,.5) calc(100% - 56px), rgba(0,0,0,.16) calc(100% - 28px), rgba(0,0,0,.04) calc(100% - 14px), transparent);
