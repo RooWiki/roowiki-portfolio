@@ -77,7 +77,8 @@
 }
 
 /* Blur overlay: uses a CSS copy of the webp (filter:blur works, backdrop-filter doesn't
-   because the WebGL canvas is opaque + mix-blend-mode:lighten). */
+   because the WebGL canvas is opaque + mix-blend-mode:lighten).
+   Mask is centered on the transition zone where the explosion meets the text. */
 .rw-hero-blur {
   position: absolute;
   inset: 0;
@@ -85,16 +86,16 @@
   pointer-events: none;
   overflow: hidden;
   mask-image:
-    linear-gradient(to right, transparent 20%, rgba(0,0,0,.7) 45%, #000 65%),
-    linear-gradient(to bottom, transparent, rgba(0,0,0,.6) 10%, #000 20%, #000 80%, rgba(0,0,0,.6) 90%, transparent);
+    linear-gradient(to right, transparent 30%, rgba(0,0,0,.9) 48%, rgba(0,0,0,.7) 65%, transparent 82%),
+    linear-gradient(to bottom, transparent, rgba(0,0,0,.7) 12%, #000 22%, #000 78%, rgba(0,0,0,.7) 88%, transparent);
   mask-composite: intersect;
 }
 .rw-hero-blur::before {
   content: '';
   position: absolute;
-  inset: -80px;
-  background: url('/vfx/hero-explosion.webp') left center / 86% auto no-repeat, var(--rw-bg);
-  filter: blur(60px);
+  inset: -120px;
+  background: url('/vfx/hero-explosion.webp') left center / 86vw auto no-repeat, var(--rw-bg);
+  filter: blur(100px);
 }
 
 /* A single masked backing avoids contours from stacked shadows and blur. */
