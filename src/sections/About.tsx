@@ -53,7 +53,6 @@ const bodyStyle: React.CSSProperties = {
   fontSize: 15,
   lineHeight: 1.85,
   color: 'var(--rw-text-secondary)',
-  margin: 0,
+  margin: '0 auto',
   maxWidth: 440,
-  marginLeft: 'auto',
 }

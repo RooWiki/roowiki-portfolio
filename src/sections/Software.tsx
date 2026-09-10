@@ -72,7 +72,7 @@ const chipStyle: React.CSSProperties = {
   background: 'var(--rw-surface)',
   border: '1px solid var(--rw-border)',
   borderRadius: 6,
-  textAlign: 'right',
+  textAlign: 'left',
 }
 
 const catStyle: React.CSSProperties = {
