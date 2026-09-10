@@ -1,5 +1,13 @@
 const EDUCATION = [
   {
+    period: '2018 – 2025',
+    institution: 'Universidad Militar Nueva Granada',
+    title: 'Ingeniero Multimedia · Digital Communication and Media/Multimedia',
+    description:
+      'Simulation, computer graphics, 3D modeling, 2D and 3D animation, application design and interactive content.',
+    skills: 'Computer Graphics · Linear Algebra',
+  },
+  {
     period: 'Feb. 2025 – Aug. 2026',
     institution: 'HSM Adult Education Centre',
     title: 'Programme de francisation à temps complet',
