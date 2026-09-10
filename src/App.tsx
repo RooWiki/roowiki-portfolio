@@ -8,6 +8,7 @@ import Software from './sections/Software'
 import Skills from './sections/Skills'
 import Tools from './sections/FeaturedProjects'
 import Projects from './sections/SelectedWork'
+import Education from './sections/Education'
 import Contact from './sections/Contact'
 import Footer from './sections/Footer'
 
@@ -24,6 +25,7 @@ export default function App() {
         <Skills />
         <Tools />
         <Projects />
+        <Education />
         <Contact />
       </main>
 

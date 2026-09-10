@@ -25,6 +25,7 @@ const SECTIONS = [
   { id: 'about', label: 'About' },
   { id: 'work', label: 'Tools' },
   { id: 'projects', label: 'VFX' },
+  { id: 'education', label: 'Education' },
   { id: 'contact', label: 'Contact' },
 ]
 
