@@ -37,7 +37,7 @@
   color: var(--rw-text-primary);
 }
 /* Blur the live artwork only around the introduction, below the sharp text.
-   The soft mask avoids a visible rectangular edge and scrolls with the hero. */
+   A feathered rectangle with rounded corners scrolls with the hero. */
 .rw-explosion-copy::before {
   content: '';
   position: absolute;
@@ -46,8 +46,15 @@
   pointer-events: none;
   -webkit-backdrop-filter: blur(28px);
   backdrop-filter: blur(28px);
-  -webkit-mask-image: radial-gradient(ellipse at center, #000 45%, transparent 72%);
-  mask-image: radial-gradient(ellipse at center, #000 45%, transparent 72%);
+  border-radius: 20px;
+  -webkit-mask-image:
+    linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent),
+    linear-gradient(to bottom, transparent, #000 20px, #000 calc(100% - 20px), transparent);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent),
+    linear-gradient(to bottom, transparent, #000 20px, #000 calc(100% - 20px), transparent);
+  mask-composite: intersect;
 }
 .rw-explosion-copy h1 {
   font-family: inherit;
