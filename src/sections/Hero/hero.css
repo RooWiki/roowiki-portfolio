@@ -22,7 +22,6 @@
   left: 0;
   top: 52px;
   pointer-events: none;
-  mix-blend-mode: lighten;
 }
 .rw-explosion-visual img, .rw-explosion-visual canvas {
   position: absolute;
@@ -30,7 +29,7 @@
   height: 100%;
   object-fit: contain;
 }
-.rw-explosion-visual img { filter: url(#rw-explosion-background); }
+.rw-explosion-visual[data-animated="true"] img { display: none; }
 .rw-explosion-copy {
   position: absolute;
   top: 35%;
