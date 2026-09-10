@@ -54,7 +54,10 @@ export default function Header() {
     <>
       <a className="rw-skip" href="#main-content">Skip to content</a>
       <header className="rw-header" aria-label="Site header">
-        <a href="#top" className="rw-wordmark">RooWiki<span aria-hidden="true"> / </span></a>
+        <a href="#top" className="rw-wordmark">
+          <img src="/favicon.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, display: 'inline-block', verticalAlign: 'middle', marginRight: 8 }} />
+          RooWiki<span aria-hidden="true"> / </span>
+        </a>
         <nav aria-label="Main navigation" className="rw-primary-nav">
           {SECTIONS.map(link => <a key={link.id} href={`#${link.id}`} aria-current={active === link.id ? 'location' : undefined}>{link.label}</a>)}
         </nav>
