@@ -19,8 +19,6 @@
   top: 52px;
   pointer-events: none;
   mix-blend-mode: lighten;
-  /* Soften both the animated VFX and static fallback, keeping the UI sharp. */
-  filter: blur(clamp(18px, 3vw, 48px));
 }
 .rw-explosion-visual img, .rw-explosion-visual canvas {
   position: absolute;
@@ -37,6 +35,19 @@
   width: calc(50% - var(--rw-page-gutter));
   text-align: right;
   color: var(--rw-text-primary);
+}
+/* Blur the live artwork only around the introduction, below the sharp text.
+   The soft mask avoids a visible rectangular edge and scrolls with the hero. */
+.rw-explosion-copy::before {
+  content: '';
+  position: absolute;
+  inset: -64px -48px;
+  z-index: -1;
+  pointer-events: none;
+  -webkit-backdrop-filter: blur(28px);
+  backdrop-filter: blur(28px);
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 45%, transparent 72%);
+  mask-image: radial-gradient(ellipse at center, #000 45%, transparent 72%);
 }
 .rw-explosion-copy h1 {
   font-family: inherit;
@@ -61,6 +72,7 @@
   .rw-explosion-visual { width: 100%; height: 61.2svh; min-height: 421px; max-height: 612px; left: 0; top: 52px; transition: opacity .3s ease; }
   .rw-explosion-visual[data-scrolled="true"] { opacity: .16; }
   .rw-explosion-copy { top: auto; bottom: 9%; right: var(--rw-page-gutter); width: calc(100% - 2 * var(--rw-page-gutter)); }
+  .rw-explosion-copy::before { inset: -40px -24px; -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
   .rw-explosion-copy h1 { font-size: clamp(48px, 14vw, 88px); margin-bottom: 20px; }
   .rw-explosion-copy p { font-size: 13px; }
   .rw-explosion-copy span { display: block; }
