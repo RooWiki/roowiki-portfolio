@@ -76,18 +76,25 @@
   .rw-scroll-link { right: var(--rw-page-gutter); bottom: 12px; }
 }
 
-/* Blur overlay: sibling div so backdrop-filter captures the fixed explosion canvas. */
+/* Blur overlay: uses a CSS copy of the webp (filter:blur works, backdrop-filter doesn't
+   because the WebGL canvas is opaque + mix-blend-mode:lighten). */
 .rw-hero-blur {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  backdrop-filter: blur(80px);
-  -webkit-backdrop-filter: blur(80px);
+  overflow: hidden;
   mask-image:
-    linear-gradient(to right, transparent 25%, rgba(0,0,0,.6) 50%, #000 70%),
-    linear-gradient(to bottom, transparent, rgba(0,0,0,.5) 8%, #000 18%, #000 82%, rgba(0,0,0,.5) 92%, transparent);
+    linear-gradient(to right, transparent 20%, rgba(0,0,0,.7) 45%, #000 65%),
+    linear-gradient(to bottom, transparent, rgba(0,0,0,.6) 10%, #000 20%, #000 80%, rgba(0,0,0,.6) 90%, transparent);
   mask-composite: intersect;
+}
+.rw-hero-blur::before {
+  content: '';
+  position: absolute;
+  inset: -80px;
+  background: url('/vfx/hero-explosion.webp') left center / 86% auto no-repeat, var(--rw-bg);
+  filter: blur(60px);
 }
 
 /* A single masked backing avoids contours from stacked shadows and blur. */
