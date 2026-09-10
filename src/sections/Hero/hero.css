@@ -36,23 +36,22 @@
   text-align: right;
   color: var(--rw-text-primary);
 }
-/* Blur the live artwork only around the introduction, below the sharp text.
-   A feathered rectangle with rounded corners scrolls with the hero. */
-.rw-explosion-copy::before {
+/* Full-height background blur in the text column; foreground stays sharp. */
+.rw-explosion-hero::before {
   content: '';
   position: absolute;
-  inset: -144px -48px;
-  z-index: -1;
+  top: 0;
+  bottom: 0;
+  right: calc(var(--rw-page-gutter) - 48px);
+  width: calc(50% - var(--rw-page-gutter) + 96px);
+  z-index: 0;
   pointer-events: none;
   -webkit-backdrop-filter: blur(28px);
   backdrop-filter: blur(28px);
-  -webkit-mask-image: url('/masks/hero-blur.svg');
-  mask-image: url('/masks/hero-blur.svg');
-  -webkit-mask-size: 100% 100%;
-  mask-size: 100% 100%;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 20%, #000 80%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 20%, #000 80%, transparent);
 }
+.rw-scroll-link { z-index: 1; }
 .rw-explosion-copy h1 {
   font-family: inherit;
   font-weight: 600;
@@ -76,7 +75,7 @@
   .rw-explosion-visual { width: 100%; height: 61.2svh; min-height: 421px; max-height: 612px; left: 0; top: 52px; transition: opacity .3s ease; }
   .rw-explosion-visual[data-scrolled="true"] { opacity: .16; }
   .rw-explosion-copy { top: auto; bottom: 9%; right: var(--rw-page-gutter); width: calc(100% - 2 * var(--rw-page-gutter)); }
-  .rw-explosion-copy::before { inset: -96px -24px; -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
+  .rw-explosion-hero::before { right: calc(var(--rw-page-gutter) - 24px); width: calc(100% - 2 * var(--rw-page-gutter) + 48px); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); }
   .rw-explosion-copy h1 { font-size: clamp(48px, 14vw, 88px); margin-bottom: 20px; }
   .rw-explosion-copy p { font-size: 13px; }
   .rw-explosion-copy span { display: block; }
