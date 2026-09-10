@@ -1,17 +1,21 @@
 .rw-page { isolation: isolate; overflow-x: clip; }
-.rw-page > main, .rw-page > footer { position: relative; z-index: 1; }
+/* Share the page stacking context: title (0), explosion (1), foreground (2). */
+.rw-page > main { position: relative; }
+.rw-page > main > :not(.rw-explosion-hero), .rw-page > footer {
+  position: relative;
+  z-index: 2;
+}
 
 .rw-explosion-hero {
   position: relative;
   height: min(850px, 100svh);
   min-height: 540px;
   overflow: hidden;
-  isolation: isolate;
   background: transparent;
 }
 .rw-explosion-visual {
   position: fixed;
-  z-index: 0;
+  z-index: 1;
   width: 86%;
   height: calc(100svh - 52px);
   min-height: 540px;
@@ -29,7 +33,6 @@
 .rw-explosion-visual img { filter: url(#rw-explosion-background); }
 .rw-explosion-copy {
   position: absolute;
-  z-index: 1;
   top: 35%;
   right: var(--rw-page-gutter);
   width: calc(50% - var(--rw-page-gutter));
@@ -37,6 +40,8 @@
   color: var(--rw-text-primary);
 }
 .rw-explosion-copy h1 {
+  position: relative;
+  z-index: 0;
   font-family: inherit;
   font-weight: 600;
   font-size: clamp(56px, 7.5vw, 144px);
@@ -44,6 +49,11 @@
   line-height: 1.1;
   margin: 0 0 24px;
 }
+.rw-explosion-copy > p, .rw-hero-actions {
+  position: relative;
+  z-index: 2;
+}
+.rw-scroll-link { z-index: 2; }
 .rw-explosion-copy p {
   color: var(--rw-text-secondary);
   font-size: clamp(11px, 1vw, 16px);
