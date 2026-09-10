@@ -55,7 +55,7 @@ export default function Header() {
       <a className="rw-skip" href="#main-content">Skip to content</a>
       <header className="rw-header" aria-label="Site header">
         <a href="#top" className="rw-wordmark">
-          <img src="/favicon.svg" alt="" aria-hidden="true" style={{ width: 18, height: 18, display: 'inline-block', verticalAlign: 'middle', marginRight: 8 }} />
+          <img src="/logo-dark.png" alt="" aria-hidden="true" style={{ width: 22, height: 22, borderRadius: 4, objectFit: 'cover', display: 'inline-block', verticalAlign: 'middle', marginRight: 6 }} />
           RooWiki<span aria-hidden="true"> / </span>
         </a>
         <nav aria-label="Main navigation" className="rw-primary-nav">
