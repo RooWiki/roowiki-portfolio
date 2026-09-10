@@ -19,6 +19,8 @@
   top: 52px;
   pointer-events: none;
   mix-blend-mode: lighten;
+  /* Soften both the animated VFX and static fallback, keeping the UI sharp. */
+  filter: blur(clamp(18px, 3vw, 48px));
 }
 .rw-explosion-visual img, .rw-explosion-visual canvas {
   position: absolute;
