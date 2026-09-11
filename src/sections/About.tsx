@@ -26,7 +26,7 @@ export default function About() {
 }
 
 const labelStyle: React.CSSProperties = {
-  fontSize: 10,
+  fontSize: 12,
   letterSpacing: '0.16em',
   textTransform: 'uppercase',
   color: 'var(--rw-text-secondary)',
@@ -34,7 +34,7 @@ const labelStyle: React.CSSProperties = {
 }
 
 const headingStyle: React.CSSProperties = {
-  fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
+  fontSize: 'clamp(1.6rem, 2.8vw, 2.4rem)',
   fontWeight: 600,
   letterSpacing: '-0.02em',
   color: 'var(--rw-text-primary)',
@@ -43,14 +43,14 @@ const headingStyle: React.CSSProperties = {
 }
 
 const metaStyle: React.CSSProperties = {
-  fontSize: 13,
+  fontSize: 15,
   color: 'var(--rw-text-secondary)',
   margin: '0 0 28px',
   letterSpacing: '0.02em',
 }
 
 const bodyStyle: React.CSSProperties = {
-  fontSize: 15,
+  fontSize: 17,
   lineHeight: 1.85,
   color: 'var(--rw-text-secondary)',
   margin: '0 auto',

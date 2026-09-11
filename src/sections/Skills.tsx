@@ -58,7 +58,7 @@ export default function Skills() {
 }
 
 const labelStyle: React.CSSProperties = {
-  fontSize: 10,
+  fontSize: 12,
   letterSpacing: '0.16em',
   textTransform: 'uppercase',
   color: 'var(--rw-text-secondary)',
@@ -66,7 +66,7 @@ const labelStyle: React.CSSProperties = {
 }
 
 const headingStyle: React.CSSProperties = {
-  fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
+  fontSize: 'clamp(1.6rem, 2.8vw, 2.4rem)',
   fontWeight: 600,
   letterSpacing: '-0.02em',
   color: 'var(--rw-text-primary)',
@@ -75,7 +75,7 @@ const headingStyle: React.CSSProperties = {
 }
 
 const groupLabelStyle: React.CSSProperties = {
-  fontSize: 10,
+  fontSize: 12,
   letterSpacing: '0.14em',
   textTransform: 'uppercase',
   color: 'var(--rw-text-secondary)',
@@ -84,7 +84,7 @@ const groupLabelStyle: React.CSSProperties = {
 }
 
 const lineStyle: React.CSSProperties = {
-  fontSize: 13,
+  fontSize: 15,
   letterSpacing: '0.04em',
   color: 'var(--rw-text-primary)',
   margin: '0 0 4px',
@@ -92,7 +92,7 @@ const lineStyle: React.CSSProperties = {
 }
 
 const toolsStyle: React.CSSProperties = {
-  fontSize: 11,
+  fontSize: 13,
   color: 'var(--rw-text-secondary)',
   margin: '10px 0 0',
   letterSpacing: '0.02em',

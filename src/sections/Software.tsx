@@ -42,7 +42,7 @@ export default function Software() {
 }
 
 const labelStyle: React.CSSProperties = {
-  fontSize: 10,
+  fontSize: 12,
   letterSpacing: '0.16em',
   textTransform: 'uppercase',
   color: 'var(--rw-text-secondary)',
@@ -50,7 +50,7 @@ const labelStyle: React.CSSProperties = {
 }
 
 const headingStyle: React.CSSProperties = {
-  fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
+  fontSize: 'clamp(1.6rem, 2.8vw, 2.4rem)',
   fontWeight: 600,
   letterSpacing: '-0.02em',
   color: 'var(--rw-text-primary)',
@@ -76,7 +76,7 @@ const chipStyle: React.CSSProperties = {
 }
 
 const catStyle: React.CSSProperties = {
-  fontSize: 9,
+  fontSize: 11,
   letterSpacing: '0.1em',
   textTransform: 'uppercase',
   color: 'var(--rw-text-secondary)',
@@ -84,7 +84,7 @@ const catStyle: React.CSSProperties = {
 }
 
 const nameStyle: React.CSSProperties = {
-  fontSize: 12,
+  fontSize: 14,
   fontWeight: 500,
   color: 'var(--rw-text-primary)',
   lineHeight: 1.3,

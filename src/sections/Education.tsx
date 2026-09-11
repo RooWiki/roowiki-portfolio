@@ -73,7 +73,7 @@ export default function Education() {
 }
 
 const labelStyle: React.CSSProperties = {
-  fontSize: 10,
+  fontSize: 12,
   letterSpacing: '0.16em',
   textTransform: 'uppercase',
   color: 'var(--rw-text-secondary)',
@@ -81,7 +81,7 @@ const labelStyle: React.CSSProperties = {
 }
 
 const headingStyle: React.CSSProperties = {
-  fontSize: 'clamp(1.4rem, 2.5vw, 2rem)',
+  fontSize: 'clamp(1.6rem, 2.8vw, 2.4rem)',
   fontWeight: 600,
   letterSpacing: '-0.02em',
   color: 'var(--rw-text-primary)',
@@ -95,7 +95,7 @@ const itemStyle: React.CSSProperties = {
 }
 
 const periodStyle: React.CSSProperties = {
-  fontSize: 10,
+  fontSize: 12,
   letterSpacing: '0.14em',
   textTransform: 'uppercase',
   color: 'var(--rw-text-secondary)',
@@ -104,7 +104,7 @@ const periodStyle: React.CSSProperties = {
 }
 
 const institutionStyle: React.CSSProperties = {
-  fontSize: 11,
+  fontSize: 13,
   letterSpacing: '0.08em',
   textTransform: 'uppercase',
   color: 'var(--rw-text-secondary)',
@@ -113,7 +113,7 @@ const institutionStyle: React.CSSProperties = {
 }
 
 const titleStyle: React.CSSProperties = {
-  fontSize: 14,
+  fontSize: 16,
   fontWeight: 600,
   letterSpacing: '-0.01em',
   color: 'var(--rw-text-primary)',
@@ -122,7 +122,7 @@ const titleStyle: React.CSSProperties = {
 }
 
 const descStyle: React.CSSProperties = {
-  fontSize: 13,
+  fontSize: 15,
   color: 'var(--rw-text-secondary)',
   margin: '0 0 6px',
   lineHeight: 1.7,
@@ -130,7 +130,7 @@ const descStyle: React.CSSProperties = {
 }
 
 const skillsStyle: React.CSSProperties = {
-  fontSize: 11,
+  fontSize: 13,
   color: 'var(--rw-text-secondary)',
   margin: '4px 0 0',
   letterSpacing: '0.04em',
